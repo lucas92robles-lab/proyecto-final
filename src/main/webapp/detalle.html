@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACTICA01 — Detalle</title>
+    <link rel="stylesheet" href="css/estilos.css">
+        <style>
+        /* Estilos exclusivos del detalle */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+ 
+        .hero-id {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+ 
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #140303;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+ 
+        .hero-modelo {
+            font-family: var(--mono);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+ 
+        .hero-meta { display: flex; gap: 1rem; flex-wrap: wrap; }
+ 
+        .meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+ 
+        .meta-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+ 
+        .meta-value { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+ 
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+            justify-content: flex-start;
+        }
+ 
+        .field { display: flex; flex-direction: column; gap: 0.2rem; }
+ 
+        .field-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+ 
+        .field-value { font-size: 1rem; font-weight: 600; color: var(--text); }
+        .field-value.mono { font-family: var(--mono); font-size: 0.9rem; color: var(--accent); }
+ 
+        .descripcion { color: var(--text); line-height: 1.6; font-size: 0.95rem; }
+ 
+        .no-specs {
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 0.5rem 0;
+        }
+ 
+        @media (max-width: 600px) {
+            .hero { grid-template-columns: 1fr; }
+            .hero-actions { flex-direction: row; align-items: center; }
+        }
+    </style>
+
+</head>
+<body>
+
+<header>
+    <div class="logo">TACTICA<span>//</span>01</div>
+    <div style="display:flex;gap:0.5rem">
+        <a class="btn btn-ghost" href="index.html">← Volver</a>
+        <a class="btn btn-primary" id="btn-editar" href="#">Editar</a>
+    </div>
+</header>
+
+<main id="main">
+    <div class="loading">// cargando ficha...</div>
+</main>
+
+<script src="js/api.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) window.location.href = 'index.html';
+
+    document.getElementById('btn-editar').href = `formulario.html?id=${id}`;
+
+    function val(v, suffix = '') {
+        return v != null ? `${v}${suffix}` : '<span style="color:var(--text-muted)">—</span>';
+    }
+
+    function badgeCategoria(cat) {
+        if (!cat) return '';
+        const mapa = {
+            'Caza': 'badge-caza', 'Misil': 'badge-misil',
+            'Radar': 'badge-radar', 'Guerra Electrónica': 'badge-ew'
+        };
+        return `<span class="badge ${mapa[cat] || 'badge-default'}">${cat}</span>`;
+    }
+
+    function renderEspecificacionesAereo(esp) {
+        if (!esp) return '<p class="no-specs">// sin especificaciones aéreas registradas</p>';
+        return `<div class="grid-4">
+            <div class="field"><span class="field-label">Vel. máx.</span><span class="field-value mono">${val(esp.velocidadMaxMach, ' Mach')}</span></div>
+            <div class="field"><span class="field-label">Techo servicio</span><span class="field-value mono">${val(esp.techoServicioPies, ' ft')}</span></div>
+            <div class="field"><span class="field-label">Radio combate</span><span class="field-value mono">${val(esp.radioCombateMillas, ' mi')}</span></div>
+            <div class="field"><span class="field-label">Carga G máx.</span><span class="field-value mono">${val(esp.cargaGMaxima, ' G')}</span></div>
+            <div class="field"><span class="field-label">Peso máx. despegue</span><span class="field-value mono">${val(esp.pesoMaxDespegueLb, ' lb')}</span></div>
+            <div class="field"><span class="field-label">RCS</span><span class="field-value mono">${val(esp.rcsM2, ' m²')}</span></div>
+            <div class="field"><span class="field-label">Envergadura</span><span class="field-value mono">${val(esp.envergaduraPies, ' ft')}</span></div>
+            <div class="field"><span class="field-label">Longitud</span><span class="field-value mono">${val(esp.longitudPies, ' ft')}</span></div>
+        </div>`;
+    }
+
+    function renderEspecificacionesMisil(esp) {
+        if (!esp) return '<p class="no-specs">// sin especificaciones de misil registradas</p>';
+        return `<div class="grid-3">
+            <div class="field"><span class="field-label">Tipo de guía</span><span class="field-value">${val(esp.tipoGuia)}</span></div>
+            <div class="field"><span class="field-label">Tipo objetivo</span><span class="field-value">${val(esp.tipoObjetivo)}</span></div>
+            <div class="field"><span class="field-label">Alcance máx.</span><span class="field-value mono">${val(esp.alcanceMaxKm, ' km')}</span></div>
+            <div class="field"><span class="field-label">Velocidad máx.</span><span class="field-value mono">${val(esp.velocidadMaxMach, ' Mach')}</span></div>
+            <div class="field"><span class="field-label">Peso ojiva</span><span class="field-value mono">${val(esp.pesoOjivaKg, ' kg')}</span></div>
+            <div class="field"><span class="field-label">Buscador</span><span class="field-value">${val(esp.tecnologiaBuscador)}</span></div>
+        </div>`;
+    }
+
+    function renderEspecificacionesRadar(esp) {
+        if (!esp) return '<p class="no-specs">// sin especificaciones de radar registradas</p>';
+        return `<div class="grid-3">
+            <div class="field"><span class="field-label">Banda frecuencia</span><span class="field-value">${val(esp.bandaFrecuencia)}</span></div>
+            <div class="field"><span class="field-label">Alcance detección</span><span class="field-value mono">${val(esp.alcanceDeteccionKm, ' km')}</span></div>
+            <div class="field"><span class="field-label">Tipo antena</span><span class="field-value">${val(esp.tipoAntena)}</span></div>
+            <div class="field"><span class="field-label">Resolución distancia</span><span class="field-value mono">${val(esp.resolucionDistanciaM, ' m')}</span></div>
+            <div class="field"><span class="field-label">Potencia pico</span><span class="field-value mono">${val(esp.potenciaPicoKw, ' kW')}</span></div>
+        </div>`;
+    }
+
+    function renderEspecificacionesEw(esp) {
+        if (!esp) return '<p class="no-specs">// sin especificaciones EW registradas</p>';
+        return `<div class="grid-3">
+            <div class="field"><span class="field-label">Frec. mín.</span><span class="field-value mono">${val(esp.rangoFrecuenciaMinMhz, ' MHz')}</span></div>
+            <div class="field"><span class="field-label">Frec. máx.</span><span class="field-value mono">${val(esp.rangoFrecuenciaMaxMhz, ' MHz')}</span></div>
+            <div class="field"><span class="field-label">Potencia ERP</span><span class="field-value mono">${val(esp.potenciaEmisionErpKw, ' kW')}</span></div>
+            <div class="field"><span class="field-label">Capacidad DRFM</span><span class="field-value">${esp.capacidadDrfm ? 'Sí' : 'No'}</span></div>
+            <div class="field"><span class="field-label">Técnicas jamming</span><span class="field-value">${val(esp.tecnicasJamming)}</span></div>
+            <div class="field"><span class="field-label">Objetivos simult.</span><span class="field-value mono">${val(esp.numeroObjetivosSimultaneos)}</span></div>
+            <div class="field" style="grid-column:1/-1"><span class="field-label">Modos operación</span><span class="field-value">${val(esp.modosOperacion)}</span></div>
+        </div>`;
+    }
+
+    async function cargar() {
+        try {
+            const m = await MedioAPI.getById(id);
+            document.title = `TACTICA01 — ${m.nombre}`;
+
+            document.getElementById('main').innerHTML = `
+                <div class="hero">
+                    <div>
+                        <div class="hero-id">// ID-${String(m.id).padStart(4,'0')}</div>
+                        <h1>${m.nombre}</h1>
+                        <div class="hero-modelo">${m.modelo || ''}</div>
+                        <div class="hero-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Categoría</span>
+                                <span class="meta-value">${badgeCategoria(m.categoria)}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">País origen</span>
+                                <span class="meta-value">${m.paisOrigen || '—'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Fabricante</span>
+                                <span class="meta-value">${m.fabricante || '—'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Año introducción</span>
+                                <span class="meta-value" style="font-family:var(--mono)">${m.añoIntroduccion || '—'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        ${m.imagenUrl ? `<img src="${m.imagenUrl}" alt="${m.nombre}" style="max-width:180px;border:1px solid var(--border)" onerror="this.style.display='none'">` : ''}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">// datos operacionales</div>
+                    <div class="section-body">
+                        <div class="grid-3">
+                            <div class="field">
+                                <span class="field-label">Costo adquisición</span>
+                                <span class="field-value mono">${m.costoAdquisicionMUsd != null ? `USD ${m.costoAdquisicionMUsd}M` : '—'}</span>
+                            </div>
+                            <div class="field">
+                                <span class="field-label">Costo operativo/hora</span>
+                                <span class="field-value mono">${m.costoOperativoHoraUsd != null ? `USD ${m.costoOperativoHoraUsd.toLocaleString()}` : '—'}</span>
+                            </div>
+                            <div class="field">
+                                <span class="field-label">Vida útil</span>
+                                <span class="field-value mono">${val(m.vidaUtilHoras, ' hs')}</span>
+                            </div>
+                            <div class="field">
+                                <span class="field-label">Tripulación</span>
+                                <span class="field-value">${val(m.tripulacionDotacion)}</span>
+                            </div>
+                            <div class="field">
+                                <span class="field-label">Inventario estimado</span>
+                                <span class="field-value">${val(m.inventarioEstimado)}</span>
+                            </div>
+                            <div class="field">
+                                <span class="field-label">Producción anual</span>
+                                <span class="field-value">${val(m.capacidadProduccionAnual)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                ${m.descripcion ? `
+                <div class="section">
+                    <div class="section-header">// descripción</div>
+                    <div class="section-body">
+                        <p class="descripcion">${m.descripcion}</p>
+                    </div>
+                </div>` : ''}
+
+                <div class="section">
+                    <div class="section-header">// especificaciones aéreas</div>
+                    <div class="section-body">${renderEspecificacionesAereo(m.especificacionesAereo)}</div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">// especificaciones de misil</div>
+                    <div class="section-body">${renderEspecificacionesMisil(m.especificacionesMisil)}</div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">// especificaciones de radar</div>
+                    <div class="section-body">${renderEspecificacionesRadar(m.especificacionesRadar)}</div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">// guerra electrónica</div>
+                    <div class="section-body">${renderEspecificacionesEw(m.especificacionesEw)}</div>
+                </div>
+            `;
+        } catch(e) {
+            document.getElementById('main').innerHTML =
+                '<div class="loading">// error al cargar ficha</div>';
+        }
+    }
+
+    cargar();
+</script>
+</body>
+</html>

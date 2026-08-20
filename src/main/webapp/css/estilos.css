@@ -1,0 +1,302 @@
+/* ============================================================
+   estilos.css — Estilos globales TACTICA01
+   ============================================================ */
+
+/* ── VARIABLES ── */
+:root {
+    --bg:        #e8f2ff;
+    --bg2:       #eee5e5;
+    --bg3:       #cfcfcf;
+    --accent:    #696969;
+    --accent2:   #011c1d;
+    --danger:    #ff4444;
+    --text:      #0d0d0e;
+    --text-muted: #0a0c0e;
+    --border:    #1e2a36;
+    --mono:      'arial', monospace;
+    --sans:      'Rajdhani', sans-serif;
+}
+
+/* ── RESET ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── BASE ── */
+body {
+    background: var(--bg);
+    color: var(--bg3);
+    font-family: var(--sans);
+    font-size: 16px;
+    min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+}
+
+.logo span { color: var(--text-muted); }
+
+/* ── NAVEGACIÓN (tabs) ── */
+nav { display: flex; gap: 0.5rem; }
+
+.tab {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.tab:hover { color: var(--text); }
+
+.tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* ── MAIN ── */
+main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+
+/* ── BOTONES ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 700;
+}
+
+.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-muted);
+}
+
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-danger {
+    background: transparent;
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.btn-danger:hover { background: var(--danger); color: #fff; }
+
+/* ── BADGES ── */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    border: 1px solid;
+    letter-spacing: 1px;
+}
+
+.badge-caza    { color: #063602; border-color: #00ff9d33; background: #00ff9d0d; }
+.badge-misil   { color: #703c00; border-color: #ff990033; background: #ff99000d; }
+.badge-radar   { color: #0a0275; border-color: #00b4ff33; background: #00b4ff0d; }
+.badge-ew      { color: #310142; border-color: #cc44ff33; background: #cc44ff0d; }
+.badge-default { color: var(--text-muted); border-color: var(--border); }
+
+/* ── SECCIONES ── */
+.section {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+}
+
+.section-header {
+    background: var(--bg3);
+    padding: 0.6rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-body { padding: 1.25rem; }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+/* ── CAMPOS FORMULARIO ── */
+.field { display: flex; flex-direction: column; gap: 0.4rem; }
+.field.full { grid-column: 1 / -1; }
+
+label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+input, select, textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
+select option { background: var(--bg2); }
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-size: 0.9rem;
+}
+
+/* ── FOOTER FORMULARIO ── */
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+}
+
+/* ── ESTADOS ── */
+.loading {
+    text-align: center;
+    padding: 4rem;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    letter-spacing: 2px;
+}
+
+.estado {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+/* ── MODAL ── */
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay.show { display: flex; }
+
+.modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    min-width: 320px;
+    max-width: 400px;
+}
+
+.modal h3 {
+    font-family: var(--mono);
+    color: var(--danger);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.modal p {
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+
+/* ── TOAST ── */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--bg3);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 0.75rem 1.5rem;
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { border-color: var(--danger); color: var(--danger); }
+
+/* ── PAGE TITLE ── */
+.page-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+    main { padding: 1rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}

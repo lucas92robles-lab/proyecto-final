@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACTICA01 — Formulario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+    
+
+</head>
+<body>
+
+<header>
+    <div class="logo">TACTICA<span>//</span>01</div>
+    <a class="btn btn-ghost" href="index.html">← Volver</a>
+</header>
+
+<main>
+    <div class="page-title" id="page-title">// nuevo medio</div>
+
+    <!-- DATOS GENERALES -->
+    <div class="section">
+        <div class="section-header">// datos generales</div>
+        <div class="section-body">
+            <div class="grid-2">
+                <div class="field">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" placeholder="ej: F-35A">
+                </div>
+                <div class="field">
+                    <label for="modelo">Modelo</label>
+                    <input type="text" id="modelo" placeholder="ej: Lightning II">
+                </div>
+                <div class="field">
+                    <label for="categoriaId">Categoría *</label>
+                    <select id="categoriaId">
+                        <option value="">— seleccionar —</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="paisOrigenId">País origen *</label>
+                    <select id="paisOrigenId">
+                        <option value="">— seleccionar —</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="fabricanteId">Fabricante</label>
+                    <select id="fabricanteId">
+                        <option value="">— seleccionar —</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="añoIntroduccion">Año introducción</label>
+                    <input type="number" id="añoIntroduccion" placeholder="ej: 2015" min="1900" max="2100">
+                </div>
+                <div class="field full">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" placeholder="Descripción general del medio..."></textarea>
+                </div>
+                <div class="field full">
+                    <label for="imagenUrl">URL imagen</label>
+                    <input type="text" id="imagenUrl" placeholder="https://...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATOS OPERACIONALES -->
+    <div class="section">
+        <div class="section-header">// datos operacionales</div>
+        <div class="section-body">
+            <div class="grid-3">
+                <div class="field">
+                    <label for="costoAdquisicionMUsd">Costo adquisición (M USD)</label>
+                    <input type="number" id="costoAdquisicionMUsd" placeholder="ej: 89.5" step="0.1">
+                </div>
+                <div class="field">
+                    <label for="costoOperativoHoraUsd">Costo operativo/hora (USD)</label>
+                    <input type="number" id="costoOperativoHoraUsd" placeholder="ej: 36000">
+                </div>
+                <div class="field">
+                    <label for="vidaUtilHoras">Vida útil (horas)</label>
+                    <input type="number" id="vidaUtilHoras" placeholder="ej: 8000">
+                </div>
+                <div class="field">
+                    <label for="tripulacionDotacion">Tripulación</label>
+                    <input type="text" id="tripulacionDotacion" placeholder="ej: 1 piloto">
+                </div>
+                <div class="field">
+                    <label for="inventarioEstimado">Inventario estimado</label>
+                    <input type="text" id="inventarioEstimado" placeholder="ej: 450+">
+                </div>
+                <div class="field">
+                    <label for="capacidadProduccionAnual">Producción anual</label>
+                    <input type="text" id="capacidadProduccionAnual" placeholder="ej: 156 unidades/año">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="form-footer">
+        <a class="btn btn-ghost" href="index.html">Cancelar</a>
+        <button class="btn btn-primary" id="btn-guardar" onclick="guardar()">Guardar medio</button>
+    </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const esEdicion = !!id;
+
+    // ── Cargar catálogos en los selects ───────────────────────
+    async function cargarCatalogos() {
+        const [paises, categorias, fabricantes] = await Promise.all([
+            CatalogoAPI.getPaises(),
+            CatalogoAPI.getCategorias(),
+            CatalogoAPI.getFabricantes()
+        ]);
+
+        poblarSelect('paisOrigenId', paises);
+        poblarSelect('categoriaId', categorias);
+        poblarSelect('fabricanteId', fabricantes);
+    }
+
+    function poblarSelect(id, items) {
+        const sel = document.getElementById(id);
+        items.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = item.nombre;
+            sel.appendChild(opt);
+        });
+    }
+
+    // ── Si es edición, cargar datos actuales ──────────────────
+    async function cargarMedio() {
+        if (!esEdicion) return;
+        document.getElementById('page-title').textContent = `// editando medio ID-${String(id).padStart(4,'0')}`;
+        document.title = `TACTICA01 — Editar`;
+
+        try {
+            const m = await MedioAPI.getById(id);
+            document.getElementById('nombre').value              = m.nombre || '';
+            document.getElementById('modelo').value              = m.modelo || '';
+            document.getElementById('añoIntroduccion').value     = m.añoIntroduccion || '';
+            document.getElementById('descripcion').value         = m.descripcion || '';
+            document.getElementById('imagenUrl').value           = m.imagenUrl || '';
+            document.getElementById('costoAdquisicionMUsd').value  = m.costoAdquisicionMUsd || '';
+            document.getElementById('costoOperativoHoraUsd').value = m.costoOperativoHoraUsd || '';
+            document.getElementById('vidaUtilHoras').value       = m.vidaUtilHoras || '';
+            document.getElementById('tripulacionDotacion').value = m.tripulacionDotacion || '';
+            document.getElementById('inventarioEstimado').value  = m.inventarioEstimado || '';
+            document.getElementById('capacidadProduccionAnual').value = m.capacidadProduccionAnual || '';
+
+            // Selects — necesitamos esperar que los catálogos estén cargados
+            // Por eso los seteamos acá, después de cargarCatalogos()
+            if (m.categoriaId)  document.getElementById('categoriaId').value  = m.categoriaId;
+            if (m.fabricanteId) document.getElementById('fabricanteId').value = m.fabricanteId;
+            if (m.paisOrigenId) document.getElementById('paisOrigenId').value = m.paisOrigenId;
+
+        } catch(e) {
+            mostrarToast('Error al cargar el medio', true);
+        }
+    }
+
+    // ── Guardar ───────────────────────────────────────────────
+    async function guardar() {
+        const nombre = document.getElementById('nombre').value.trim();
+        const categoriaId = document.getElementById('categoriaId').value;
+        const paisOrigenId = document.getElementById('paisOrigenId').value;
+
+        if (!nombre || !categoriaId || !paisOrigenId) {
+            mostrarToast('Completá los campos obligatorios (*)', true);
+            return;
+        }
+
+        const btn = document.getElementById('btn-guardar');
+        btn.disabled = true;
+        btn.textContent = 'Guardando...';
+
+        const payload = {
+            nombre,
+            modelo:                   document.getElementById('modelo').value || null,
+            categoriaId:              parseInt(categoriaId),
+            paisOrigenId:             parseInt(paisOrigenId),
+            fabricanteId:             document.getElementById('fabricanteId').value
+                                        ? parseInt(document.getElementById('fabricanteId').value)
+                                        : null,
+            añoIntroduccion:          document.getElementById('añoIntroduccion').value
+                                        ? parseInt(document.getElementById('añoIntroduccion').value)
+                                        : null,
+            descripcion:              document.getElementById('descripcion').value || null,
+            imagenUrl:                document.getElementById('imagenUrl').value || null,
+            costoAdquisicionMUsd:     document.getElementById('costoAdquisicionMUsd').value
+                                        ? parseFloat(document.getElementById('costoAdquisicionMUsd').value)
+                                        : null,
+            costoOperativoHoraUsd:    document.getElementById('costoOperativoHoraUsd').value
+                                        ? parseInt(document.getElementById('costoOperativoHoraUsd').value)
+                                        : null,
+            vidaUtilHoras:            document.getElementById('vidaUtilHoras').value
+                                        ? parseInt(document.getElementById('vidaUtilHoras').value)
+                                        : null,
+            tripulacionDotacion:      document.getElementById('tripulacionDotacion').value || null,
+            inventarioEstimado:       document.getElementById('inventarioEstimado').value || null,
+            capacidadProduccionAnual: document.getElementById('capacidadProduccionAnual').value || null,
+        };
+
+        try {
+            if (esEdicion) {
+                await MedioAPI.update(id, payload);
+                mostrarToast('Medio actualizado correctamente');
+            } else {
+                const nuevo = await MedioAPI.create(payload);
+                mostrarToast('Medio creado correctamente');
+                setTimeout(() => {
+                    window.location.href = `detalle.html?id=${nuevo.id}`;
+                }, 1500);
+                return;
+            }
+            setTimeout(() => window.location.href = 'index.html', 1500);
+        } catch(e) {
+            mostrarToast('Error al guardar', true);
+            btn.disabled = false;
+            btn.textContent = 'Guardar medio';
+        }
+    }
+
+    // ── Toast ─────────────────────────────────────────────────
+    function mostrarToast(msg, error = false) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast show' + (error ? ' error' : '');
+        setTimeout(() => t.className = 'toast', 3000);
+    }
+
+    // ── Init ──────────────────────────────────────────────────
+    async function init() {
+        await cargarCatalogos();
+        await cargarMedio();
+    }
+
+    init();
+</script>
+</body>
+</html>

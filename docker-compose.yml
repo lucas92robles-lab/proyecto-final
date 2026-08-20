@@ -1,0 +1,31 @@
+services:
+  # SERVICIO DE BASE DE DATOS (PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: tactica_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: tactica_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Esto asegura que tus datos no se borren al apagar el contenedor
+      - postgres_data:/var/lib/postgresql/data
+
+  # INTERFAZ GRÁFICA (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: tactica_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@tactica.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      # Mapeamos el puerto 80 del contenedor al 5050 de tu PC
+      # Así dejamos el 8080 libre para Java/WildFly
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

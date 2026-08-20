@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACTICA01 — Base de Medios</title>
+    <link rel="stylesheet" href="css/estilos.css">
+
+        <style>
+        /* Estilos exclusivos del listado */
+        .panel { display: none; }
+        .panel.active { display: block; border-radius: 5px;}
+ 
+        .toolbar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+ 
+        .search-box {
+            flex: 1;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+ 
+        .search-box:focus { border-color: var(--accent); }
+        .search-box::placeholder { color: var(--text-muted); }
+ 
+        select.filter {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+ 
+        select.filter:focus { border-color: var(--accent); }
+ 
+        .table-wrap {
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+ 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+ 
+        thead {
+            background: var(--bg3);
+            border-bottom: 1px solid var(--border);
+        }
+ 
+        th {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            white-space: nowrap;
+        }
+ 
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: middle;
+        }
+ 
+        tr:last-child td { border-bottom: none; }
+ 
+        tbody tr { transition: background 0.15s; cursor: pointer; }
+        tbody tr:hover { background: var(--bg3); }
+ 
+        .actions { display: flex; gap: 0.5rem; }
+ 
+        .count {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+    </style>
+
+
+   
+</head>
+<body>
+
+<header>
+    <div class="logo">SISTEMA DE INFORMACION TACTICA<span>//</span>V.0.01</div>
+    <nav>
+        <button class="tab active" onclick="showPanel('listado', this)">Listado</button>
+        <button class="tab" onclick="showPanel('nuevo', this)">+ Nuevo medio</button>
+    </nav>
+</header>
+
+<main>
+    <!-- PANEL: LISTADO -->
+    <div id="panel-listado" class="panel active">
+        <div class="toolbar">
+            <input class="search-box" type="text" id="search" placeholder="// buscar por nombre o modelo..." oninput="filtrarTabla()">
+            <select class="filter" id="filter-cat" onchange="filtrarPorCategoria()">
+                <option value="">Todas las categorías</option>
+            </select>
+            <span class="count" id="count-label"></span>
+        </div>
+
+        <div class="table-wrap">
+            <table id="tabla-medios">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Categoría</th>
+                        <th>País origen</th>
+                        <th>Fabricante</th>
+                        <th>Año</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+        <div id="estado-listado" class="estado">// cargando datos...</div>
+    </div>
+
+    <!-- PANEL: NUEVO (redirige a formulario.html) -->
+    <div id="panel-nuevo" class="panel">
+        <!-- Se maneja con JS al cambiar de tab -->
+    </div>
+</main>
+
+<!-- Modal confirmación eliminación -->
+<div class="overlay" id="modal-delete">
+    <div class="modal">
+        <h3>⚠ confirmar eliminación</h3>
+        <p id="modal-msg">¿Estás seguro que querés eliminar este medio? Esta acción no se puede deshacer.</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn btn-danger" id="btn-confirm-delete">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script>
+    let mediosPorEliminar = null;
+    let todosLosMedios = [];
+
+    // ── Navegación de tabs ────────────────────────────────────
+    function showPanel(panel, btn) {
+        if (panel === 'nuevo') {
+            window.location.href = 'formulario.html';
+            return;
+        }
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`panel-${panel}`).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // ── Cargar catálogo de categorías en el filtro ────────────
+    async function cargarCategorias() {
+        const cats = await CatalogoAPI.getCategorias();
+        const sel = document.getElementById('filter-cat');
+        cats.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.nombre;
+            sel.appendChild(opt);
+        });
+    }
+
+    // ── Badge por categoría ───────────────────────────────────
+    function badgeCategoria(cat) {
+        if (!cat) return '';
+        const mapa = {
+            'Caza': 'badge-caza',
+            'Misil': 'badge-misil',
+            'Radar': 'badge-radar',
+            'Guerra Electrónica': 'badge-ew'
+        };
+        const cls = mapa[cat] || 'badge-default';
+        return `<span class="badge ${cls}">${cat}</span>`;
+    }
+
+    // ── Renderizar fila ───────────────────────────────────────
+    function renderFila(m) {
+        return `<tr onclick="verDetalle(${m.id})">
+            <td><span style="font-family:var(--mono);color:var(--text-muted);font-size:0.8rem">${m.id}</span></td>
+            <td><strong>${m.nombre}</strong></td>
+            <td style="color:var(--text-muted)">${m.modelo || '—'}</td>
+            <td>${badgeCategoria(m.categoria)}</td>
+            <td>${m.paisOrigen || '—'}</td>
+            <td>${m.fabricante || '—'}</td>
+            <td style="font-family:var(--mono);font-size:0.85rem">${m.añoIntroduccion || '—'}</td>
+            <td>
+                <div class="actions" onclick="event.stopPropagation()">
+                    <a class="btn btn-ghost" href="formulario.html?id=${m.id}" title="Editar">Editar</a>
+                    <button class="btn btn-danger" onclick="confirmarEliminar(${m.id}, '${m.nombre}')" title="Eliminar">✕</button>
+                </div>
+            </td>
+        </tr>`;
+    }
+
+    // ── Cargar medios ─────────────────────────────────────────
+    async function cargarMedios() {
+        try {
+            todosLosMedios = await MedioAPI.getAll();
+            renderTabla(todosLosMedios);
+        } catch (e) {
+            document.getElementById('estado-listado').textContent = '// error al cargar datos';
+        }
+    }
+
+    function renderTabla(medios) {
+        const tbody = document.getElementById('tbody');
+        const estado = document.getElementById('estado-listado');
+        if (medios.length === 0) {
+            tbody.innerHTML = '';
+            estado.style.display = 'block';
+            estado.textContent = '// sin resultados';
+        } else {
+            tbody.innerHTML = medios.map(renderFila).join('');
+            estado.style.display = 'none';
+        }
+        document.getElementById('count-label').textContent = `${medios.length} registro(s)`;
+    }
+
+    // ── Filtros ───────────────────────────────────────────────
+    function filtrarTabla() {
+        const q = document.getElementById('search').value.toLowerCase();
+        const filtrados = todosLosMedios.filter(m =>
+            (m.nombre || '').toLowerCase().includes(q) ||
+            (m.modelo || '').toLowerCase().includes(q)
+        );
+        renderTabla(filtrados);
+    }
+
+    async function filtrarPorCategoria() {
+        const catId = document.getElementById('filter-cat').value;
+        if (!catId) {
+            renderTabla(todosLosMedios);
+            return;
+        }
+        try {
+            const filtrados = await MedioAPI.getByCategoria(catId);
+            renderTabla(filtrados);
+        } catch (e) {
+            mostrarToast('Error al filtrar', true);
+        }
+    }
+
+    // ── Navegación ────────────────────────────────────────────
+    function verDetalle(id) {
+        window.location.href = `detalle.html?id=${id}`;
+    }
+
+    // ── Eliminar ──────────────────────────────────────────────
+    function confirmarEliminar(id, nombre) {
+        mediosPorEliminar = id;
+        document.getElementById('modal-msg').textContent =
+            `¿Estás seguro que querés eliminar "${nombre}"? Esta acción no se puede deshacer.`;
+        document.getElementById('modal-delete').classList.add('show');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modal-delete').classList.remove('show');
+        mediosPorEliminar = null;
+    }
+
+    document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
+        if (!mediosPorEliminar) return;
+        try {
+            await MedioAPI.delete(mediosPorEliminar);
+            cerrarModal();
+            mostrarToast('Medio eliminado correctamente');
+            await cargarMedios();
+        } catch (e) {
+            mostrarToast('Error al eliminar', true);
+        }
+    });
+
+    // ── Toast ─────────────────────────────────────────────────
+    function mostrarToast(msg, error = false) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast show' + (error ? ' error' : '');
+        setTimeout(() => t.className = 'toast', 3000);
+    }
+
+    // ── Init ──────────────────────────────────────────────────
+    cargarCategorias();
+    cargarMedios();
+</script>
+</body>
+</html>

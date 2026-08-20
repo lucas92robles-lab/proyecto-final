@@ -1,0 +1,28 @@
+# ============================================================
+# datasource-setup.cli
+# Configura el driver PostgreSQL y el datasource en WildFly
+# Se ejecuta al iniciar con: mvn wildfly:dev
+# El if/end-if evita errores si ya fueron configurados
+# ============================================================
+
+# 1. Registrar el driver PostgreSQL (solo si no existe)
+if (outcome != success) of /subsystem=datasources/jdbc-driver=postgresql:read-resource
+    /subsystem=datasources/jdbc-driver=postgresql:add(\
+        driver-name=postgresql,\
+        driver-module-name=org.postgresql,\
+        driver-class-name=org.postgresql.Driver\
+    )
+end-if
+
+# 2. Crear el datasource (solo si no existe)
+if (outcome != success) of /subsystem=datasources/data-source=TacticaDS:read-resource
+    data-source add \
+        --name=TacticaDS \
+        --jndi-name=java:/jdbc/TacticaDS \
+        --driver-name=postgresql \
+        --connection-url=jdbc:postgresql://localhost:5432/tactica_db \
+        --user-name=admin \
+        --password=adminpassword \
+        --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker \
+        --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter
+end-if

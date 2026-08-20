@@ -1,0 +1,17 @@
+# Archivos de compilación de Maven
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# Archivos de configuración de Entornos de Desarrollo (IDEs)
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Archivos del sistema operativo (basura)
+.DS_Store
+Thumbs.db
+
