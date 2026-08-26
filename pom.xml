@@ -38,6 +38,20 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Jakarta MVC API -->
+        <dependency>
+            <groupId>jakarta.mvc</groupId>
+            <artifactId>jakarta.mvc-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        
+        <!-- Implementación de Jakarta MVC para WildFly (Eclipse Krazo) -->
+        <dependency>
+            <groupId>org.eclipse.krazo</groupId>
+            <artifactId>krazo-resteasy</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
         <!-- Driver PostgreSQL — va dentro del WAR -->
         <dependency>
             <groupId>org.postgresql</groupId>

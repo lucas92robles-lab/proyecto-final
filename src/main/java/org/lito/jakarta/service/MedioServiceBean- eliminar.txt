@@ -59,6 +59,21 @@ public class MedioServiceBean implements MedioService {
     }
 
     @Override
+    public List<MedioListDTO> findByCategoriaNombre(String nombreCategoria) {
+        return em.createQuery(
+                "SELECT m FROM Medio m " +
+                "JOIN FETCH m.fabricante " +
+                "JOIN FETCH m.categoria " +
+                "JOIN FETCH m.paisOrigen " +
+                "WHERE m.categoria.nombre = :catNombre", Medio.class)
+                .setParameter("catNombre", nombreCategoria)
+                .getResultList()
+                .stream()
+                .map(this::toListDTO)
+                .toList();
+    }
+
+    @Override
     public MedioDetalleDTO create(MedioCreateDTO dto) {
         Medio medio = fromCreateDTO(dto);
         em.persist(medio);

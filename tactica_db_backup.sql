@@ -202,6 +202,20 @@ ALTER TABLE ONLY public.operadores_medios ADD CONSTRAINT operadores_medios_pkey 
 ALTER TABLE ONLY public.pais ADD CONSTRAINT pais_nombre_key UNIQUE (nombre);
 ALTER TABLE ONLY public.pais ADD CONSTRAINT pais_pkey PRIMARY KEY (id);
 
+CREATE TABLE public.usuarios (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username character varying(50) UNIQUE NOT NULL,
+    password character varying(255) NOT NULL,
+    rol character varying(20) NOT NULL
+);
+
+ALTER TABLE public.usuarios OWNER TO admin;
+
+-- Insertamos dos usuarios de prueba para evaluar los roles
+INSERT INTO public.usuarios (username, password, rol) VALUES 
+('admin', 'admin123', 'ADMIN'),
+('invitado', 'invitado123', 'VISITANTE');
+
 ALTER TABLE ONLY public.especificaciones_aereo ADD CONSTRAINT especificaciones_aereo_medio_id_fkey FOREIGN KEY (medio_id) REFERENCES public.medio(id);
 ALTER TABLE ONLY public.especificaciones_ew ADD CONSTRAINT especificaciones_ew_medio_id_fkey FOREIGN KEY (medio_id) REFERENCES public.medio(id);
 ALTER TABLE ONLY public.especificaciones_misil ADD CONSTRAINT especificaciones_misil_medio_id_fkey FOREIGN KEY (medio_id) REFERENCES public.medio(id);
