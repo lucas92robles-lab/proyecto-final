@@ -36,6 +36,9 @@
         <h2>${tituloModulo}</h2>
         
         <table>
+            <div style="margin-bottom: 15px;">
+                <a href="${pageContext.request.contextPath}/app/medios/nuevo" style="padding: 10px 15px; background-color: #27ae60; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">+ NUEVO ACTIVO</a>
+            </div>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -52,12 +55,13 @@
                         <td>${medio.nombre}</td>
                         <!-- <td>${medio.estadoOperativo}</td> -->
                         <td>
-                            <a href="#">Ver Detalles</a>
+                            <a href="${pageContext.request.contextPath}/app/medios/detalle/${medio.id}">Ver Detalles</a>
+                            <a href="${pageContext.request.contextPath}/app/medios/editar/${medio.id}" style="color: #f39c12;">Editar</a>
                             <c:if test="${usuarioSession.usuarioActual.rol == 'ADMIN'}">
                                 | <a href="#" style="color: red;">Eliminar</a>
                             </c:if>
                         </td>
-                    </tr>
+                    </tr>      
                 </c:forEach>
             </tbody>
         </table>
