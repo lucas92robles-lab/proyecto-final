@@ -63,7 +63,7 @@ public class Medio {
     private EspecificacionesRadar especificacionesRadar;
 
     @OneToOne(mappedBy = "medio", cascade = CascadeType.ALL, optional = true)
-    private EspecificacionesMisil especificacionesMisil;
+    private EspecificacionesArmamento especificacionesMisil;
 
     @OneToMany(mappedBy = "plataforma")
     private List<IntegracionArmamento> armasIntegradas;  // misiles que puede usar
@@ -80,7 +80,7 @@ public class Medio {
             Integer añoIntroduccion, String tripulacionDotacion, String inventarioEstimado,
             String capacidadProduccionAnual, String descripcion, String imagenUrl,
             EspecificacionesAereo especificacionesAereo, EspecificacionesEw especificacionesEw,
-            EspecificacionesRadar especificacionesRadar, EspecificacionesMisil especificacionesMisil,
+            EspecificacionesRadar especificacionesRadar, EspecificacionesArmamento especificacionesMisil,
             List<IntegracionArmamento> armasIntegradas, List<IntegracionArmamento> plataformasCompatibles,
             List<OperadoresMedios> operadores) {
         this.id = id;
@@ -254,11 +254,11 @@ public class Medio {
         this.especificacionesRadar = especificacionesRadar;
     }
 
-    public EspecificacionesMisil getEspecificacionesMisil() {
+    public EspecificacionesArmamento getEspecificacionesMisil() {
         return especificacionesMisil;
     }
 
-    public void setEspecificacionesMisil(EspecificacionesMisil especificacionesMisil) {
+    public void setEspecificacionesMisil(EspecificacionesArmamento especificacionesMisil) {
         this.especificacionesMisil = especificacionesMisil;
     }
 

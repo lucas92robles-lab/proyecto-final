@@ -35,6 +35,12 @@
     <div class="container">
         <h2>${tituloModulo}</h2>
         
+     <!-- Mensaje Flash de Éxito al Eliminar -->
+        <c:if test="${param.exito == 'eliminado'}">
+            <div style="background-color: #d4edda; color: #155724; padding: 12px; border: 1px solid #c3e6cb; border-radius: 4px; margin-bottom: 15px; font-weight: bold;">
+                El activo táctico fue dado de baja correctamente del inventario.
+            </div>
+        </c:if>   
         <table>
             <div style="margin-bottom: 15px;">
                 <a href="${pageContext.request.contextPath}/app/medios/nuevo" style="padding: 10px 15px; background-color: #27ae60; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">+ NUEVO ACTIVO</a>
@@ -58,7 +64,7 @@
                             <a href="${pageContext.request.contextPath}/app/medios/detalle/${medio.id}">Ver Detalles</a>
                             <a href="${pageContext.request.contextPath}/app/medios/editar/${medio.id}" style="color: #f39c12;">Editar</a>
                             <c:if test="${usuarioSession.usuarioActual.rol == 'ADMIN'}">
-                                | <a href="#" style="color: red;">Eliminar</a>
+                            <a href="${pageContext.request.contextPath}/app/medios/eliminar/${medio.id}" style="color: #e74c3c; text-decoration: none; font-weight: bold;"  onclick="return confirm('ATENCIÓN: ¿Estás seguro de que deseás dar de baja este activo táctico? Esta acción no se puede deshacer.');">Eliminar</a>
                             </c:if>
                         </td>
                     </tr>      

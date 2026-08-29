@@ -10,8 +10,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "especificaciones_misil")
-public class EspecificacionesMisil {
+@Table(name = "especificaciones_armamento")
+public class EspecificacionesArmamento {
     @Id
     @Column(name = "medio_id")
     private Integer id;
@@ -40,7 +40,7 @@ public class EspecificacionesMisil {
     @Column(name = "tecnologia_buscador")
     private String tecnologiaBuscador;
 
-    public EspecificacionesMisil(Integer id, Medio medio, String tipoGuia, String tipoObjetivo, BigDecimal alcanceMaxKm,
+    public EspecificacionesArmamento(Integer id, Medio medio, String tipoGuia, String tipoObjetivo, BigDecimal alcanceMaxKm,
             BigDecimal velocidadMaxMach, BigDecimal pesoOjivaKg, String tecnologiaBuscador) {
         this.id = id;
         this.medio = medio;
@@ -52,7 +52,7 @@ public class EspecificacionesMisil {
         this.tecnologiaBuscador = tecnologiaBuscador;
     }
 
-    public EspecificacionesMisil() {
+    public EspecificacionesArmamento() {
     }
 
     public Integer getId() {
