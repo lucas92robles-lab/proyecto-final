@@ -36,6 +36,18 @@ public class MedioService {
     }
 
     @Transactional
+    public List<MedioListDTO> obtenerPorFiltroEspecifico(String filtro) {
+        List<Medio> medios = em.createQuery(
+                "SELECT m FROM Medio m WHERE LOWER(m.categoria.nombre) = LOWER(:filtro)", Medio.class)
+                .setParameter("filtro", filtro)
+                .getResultList();
+        
+        return medios.stream()
+                .map(this::convertirAListDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public List<MedioListDTO> obtenerTodos() {
         List<Medio> medios = em.createQuery("SELECT m FROM Medio m", Medio.class)
                 .getResultList();
@@ -49,6 +61,24 @@ public class MedioService {
         MedioListDTO dto = new MedioListDTO();
         dto.setId(medio.getId());
         dto.setNombre(medio.getNombre());
+        
+        if (medio.getModelo() != null) {
+            dto.setModelo(medio.getModelo());
+        }
+        
+        if (medio.getCategoria() != null) {
+            dto.setCategoria(medio.getCategoria().getNombre());
+        }
+        
+        // Si tenés estos atributos mapeados en tu entidad Medio.java, 
+        // descomentalos para que lleguen completos a la tabla del ORBAT:
+        // dto.setPaisOrigen(medio.getPaisOrigen());
+        // if (medio.getFabricante() != null) {
+        //     dto.setFabricante(medio.getFabricante().getNombre());
+        // }
+        // dto.setImagenUrl(medio.getImagenUrl());
+        // dto.setAñoIntroduccion(medio.getAñoIntroduccion());
+        
         return dto;
     }
 
@@ -63,6 +93,27 @@ public class MedioService {
         MedioDetalleDTO dto = new MedioDetalleDTO();
         dto.setId(medio.getId());
         dto.setNombre(medio.getNombre());
+
+        // Mapeo de campos generales
+        dto.setModelo(medio.getModelo());
+        dto.setImagenUrl(medio.getImagenUrl());
+        dto.setAñoIntroduccion(medio.getAñoIntroduccion());
+        dto.setCostoAdquisicionMUsd(medio.getCostoAdquisicionMUsd());
+        dto.setCostoOperativoHoraUsd(medio.getCostoOperativoHoraUsd());
+        dto.setVidaUtilHoras(medio.getVidaUtilHoras());
+        dto.setTripulacionDotacion(medio.getTripulacionDotacion());
+        dto.setInventarioEstimado(medio.getInventarioEstimado());
+        dto.setCapacidadProduccionAnual(medio.getCapacidadProduccionAnual());
+        dto.setDescripcion(medio.getDescripcion());
+
+        // Extraemos solo el String de los objetos relacionados
+        if (medio.getPaisOrigen() != null) {
+            dto.setPaisOrigen(medio.getPaisOrigen().getNombre()); // Asume que Pais tiene getNombre()
+        }
+        if (medio.getFabricante() != null) {
+            dto.setFabricante(medio.getFabricante().getNombre()); // Asume que Fabricante tiene getNombre()
+        }
+
         
         if (medio.getCategoria() != null) {
             // Guardamos el nombre para mostrarlo en pantalla
@@ -138,103 +189,103 @@ public class MedioService {
     } 
 
     @Transactional
-    public void guardarMedioCompleto(Integer id, String nombre, Integer categoriaId,
-                                    Double velocidadMaxMach, Integer techoServicioPies, Integer radioCombateMillas, Double cargaGMaxima, Double pesoMaxDespegueLb,
-                                    String bandaFrecuencia, Double alcanceDeteccionKm, Double potenciaPicoKw,
-                                    Double rangoFrecuenciaMinMhz, Double rangoFrecuenciaMaxMhz, String modosOperacion, Boolean capacidadDrfm,
-                                    String tipoGuia, Double alcanceMaxKm, Double pesoOjivaKg) {
-        
-        Medio medio;
-        boolean esNuevoMedio = (id == null || id == 0);
-        
-        // 1. Guardar/Actualizar tabla principal
-        if (esNuevoMedio) {
-            medio = new Medio();
-        } else {
-            medio = em.find(Medio.class, id);
-        }
-        
-        medio.setNombre(nombre);
-        
-        if (categoriaId != null) {
-            Categoria cat = em.find(Categoria.class, categoriaId);
-            medio.setCategoria(cat);
-        }
+    public void guardarMedioCompleto(Integer id, String nombre, Integer categoriaId,    
+                                String modelo, String imagenUrl, Integer añoIntro, Double costoAdq, Integer costoOp, String descripcion,
+                                Double velocidadMaxMach, Integer techoServicioPies, Integer radioCombateMillas, Double cargaGMaxima, Double pesoMaxDespegueLb, Double rcsM2, Double envPies, Double lonPies,
+                                String bandaFrecuencia, Double alcanceDeteccionKm, Double potenciaPicoKw, String tipoAntena, Double resolucionDist,
+                                Double rangoFrecuenciaMinMhz, Double rangoFrecuenciaMaxMhz, String modosOperacion, Double potErp, String tecnicasJamming, Integer numObjs, Boolean capacidadDrfm,
+                                String tipoGuia, String tipoObjetivo, String tecnologiaBuscador, Double alcanceMaxKm, Double velArm, Double pesoOjivaKg) {
+    
+    Medio medio;
+    boolean esNuevoMedio = (id == null || id == 0);
+    
+    if (esNuevoMedio) {
+        medio = new Medio();
+    } else {
+        medio = em.find(Medio.class, id);
+    }
+    
+    // Asignación de datos generales
+    medio.setNombre(nombre);
+    medio.setModelo(modelo);
+    medio.setImagenUrl(imagenUrl);
+    medio.setAñoIntroduccion(añoIntro);
+    medio.setCostoAdquisicionMUsd(costoAdq != null ? BigDecimal.valueOf(costoAdq) : null);
+    medio.setCostoOperativoHoraUsd(costoOp);
+    medio.setDescripcion(descripcion);
+    
+    if (categoriaId != null) {
+        Categoria cat = em.find(Categoria.class, categoriaId);
+        medio.setCategoria(cat);
+    }
 
-        if (esNuevoMedio) {
-            em.persist(medio);
-            em.flush(); // Generamos el ID inmediatamente en la BD
-        } else {
-            em.merge(medio);
-        }
-        
-        // 2. Guardar en la tabla hija correspondiente separando persist de merge
-        if (categoriaId != null) {
-            if (categoriaId >= 1 && categoriaId <= 5) { 
-                EspecificacionesAereo aereo = em.find(EspecificacionesAereo.class, medio.getId());
-                boolean esNuevaFicha = (aereo == null);
-                
-                if (esNuevaFicha) { 
-                    aereo = new EspecificacionesAereo(); 
-                    aereo.setMedio(medio); // @MapsId hace el resto
-                }
-                
-                aereo.setVelocidadMaxMach(velocidadMaxMach != null ? BigDecimal.valueOf(velocidadMaxMach) : null);
-                aereo.setTechoServicioPies(techoServicioPies);
-                aereo.setRadioCombateMillas(radioCombateMillas);
-                aereo.setCargaGMaxima(cargaGMaxima != null ? BigDecimal.valueOf(cargaGMaxima) : null);
-                aereo.setPesoMaxDespegueLb(pesoMaxDespegueLb != null ? pesoMaxDespegueLb.intValue() : null);
-                
-                if (esNuevaFicha) em.persist(aereo); else em.merge(aereo);
-                
-            } else if (categoriaId >= 90 && categoriaId <= 94 && categoriaId != 92 && categoriaId != 93) {
-                EspecificacionesRadar radar = em.find(EspecificacionesRadar.class, medio.getId());
-                boolean esNuevaFicha = (radar == null);
-                
-                if (esNuevaFicha) { 
-                    radar = new EspecificacionesRadar(); 
-                    radar.setMedio(medio); 
-                }
-                
-                radar.setBandaFrecuencia(bandaFrecuencia);
-                radar.setAlcanceDeteccionKm(alcanceDeteccionKm != null ? alcanceDeteccionKm.intValue() : null);
-                radar.setPotenciaPicoKw(potenciaPicoKw != null ? BigDecimal.valueOf(potenciaPicoKw) : null);
-                
-                if (esNuevaFicha) em.persist(radar); else em.merge(radar);
-                
-            } else if (categoriaId >= 101 && categoriaId <= 103) {
-                EspecificacionesEw ew = em.find(EspecificacionesEw.class, medio.getId());
-                boolean esNuevaFicha = (ew == null);
-                
-                if (esNuevaFicha) { 
-                    ew = new EspecificacionesEw(); 
-                    ew.setMedio(medio); 
-                }
-                
-                ew.setRangoFrecuenciaMinMhz(rangoFrecuenciaMinMhz != null ? BigDecimal.valueOf(rangoFrecuenciaMinMhz) : null);
-                ew.setRangoFrecuenciaMaxMhz(rangoFrecuenciaMaxMhz != null ? BigDecimal.valueOf(rangoFrecuenciaMaxMhz) : null);
-                ew.setModosOperacion(modosOperacion);
-                ew.setCapacidadDrfm(capacidadDrfm != null ? capacidadDrfm : false);
-                
-                if (esNuevaFicha) em.persist(ew); else em.merge(ew);
-                
-            } else if (categoriaId >= 201 && categoriaId <= 204) {
-                EspecificacionesArmamento armamento = em.find(EspecificacionesArmamento.class, medio.getId());
-                boolean esNuevaFicha = (armamento == null);
-                
-                if (esNuevaFicha) { 
-                    armamento = new EspecificacionesArmamento(); 
-                    armamento.setMedio(medio); 
-                }
-                
-                armamento.setTipoGuia(tipoGuia);
-                armamento.setAlcanceMaxKm(alcanceMaxKm != null ? BigDecimal.valueOf(alcanceMaxKm) : null);
-                armamento.setPesoOjivaKg(pesoOjivaKg != null ? BigDecimal.valueOf(pesoOjivaKg) : null);
-                
-                if (esNuevaFicha) em.persist(armamento); else em.merge(armamento);
-            }
+    if (esNuevoMedio) em.persist(medio); else em.merge(medio);
+    
+    if (categoriaId != null) {
+        // AÉREO
+        if (categoriaId >= 1 && categoriaId <= 5) { 
+            EspecificacionesAereo aereo = em.find(EspecificacionesAereo.class, medio.getId());
+            boolean esNuevaFicha = (aereo == null);
+            if (esNuevaFicha) { aereo = new EspecificacionesAereo(); aereo.setMedio(medio); }
+            
+            aereo.setVelocidadMaxMach(velocidadMaxMach != null ? BigDecimal.valueOf(velocidadMaxMach) : null);
+            aereo.setTechoServicioPies(techoServicioPies);
+            aereo.setRadioCombateMillas(radioCombateMillas);
+            aereo.setCargaGMaxima(cargaGMaxima != null ? BigDecimal.valueOf(cargaGMaxima) : null);
+            aereo.setPesoMaxDespegueLb(pesoMaxDespegueLb != null ? pesoMaxDespegueLb.intValue() : null);
+            aereo.setRcsM2(rcsM2 != null ? BigDecimal.valueOf(rcsM2) : null);
+            aereo.setEnvergaduraPies(envPies != null ? BigDecimal.valueOf(envPies) : null);
+            aereo.setLongitudPies(lonPies != null ? BigDecimal.valueOf(lonPies) : null);
+            
+            if (esNuevaFicha) em.persist(aereo); else em.merge(aereo);
+            
+        // RADAR
+        } else if (categoriaId >= 90 && categoriaId <= 94 && categoriaId != 92 && categoriaId != 93) {
+            EspecificacionesRadar radar = em.find(EspecificacionesRadar.class, medio.getId());
+            boolean esNuevaFicha = (radar == null);
+            if (esNuevaFicha) { radar = new EspecificacionesRadar(); radar.setMedio(medio); }
+            
+            radar.setBandaFrecuencia(bandaFrecuencia);
+            radar.setAlcanceDeteccionKm(alcanceDeteccionKm != null ? alcanceDeteccionKm.intValue() : null);
+            radar.setPotenciaPicoKw(potenciaPicoKw != null ? BigDecimal.valueOf(potenciaPicoKw) : null);
+            radar.setTipoAntena(tipoAntena);
+            radar.setResolucionDistanciaM(resolucionDist != null ? BigDecimal.valueOf(resolucionDist) : null);
+            
+            if (esNuevaFicha) em.persist(radar); else em.merge(radar);
+            
+        // EW
+        } else if (categoriaId >= 101 && categoriaId <= 103) {
+            EspecificacionesEw ew = em.find(EspecificacionesEw.class, medio.getId());
+            boolean esNuevaFicha = (ew == null);
+            if (esNuevaFicha) { ew = new EspecificacionesEw(); ew.setMedio(medio); }
+            
+            ew.setRangoFrecuenciaMinMhz(rangoFrecuenciaMinMhz != null ? BigDecimal.valueOf(rangoFrecuenciaMinMhz) : null);
+            ew.setRangoFrecuenciaMaxMhz(rangoFrecuenciaMaxMhz != null ? BigDecimal.valueOf(rangoFrecuenciaMaxMhz) : null);
+            ew.setModosOperacion(modosOperacion);
+            ew.setPotenciaEmisionErpKw(potErp != null ? BigDecimal.valueOf(potErp) : null);
+            ew.setTecnicasJamming(tecnicasJamming);
+            ew.setNumeroObjetivosSimultaneos(numObjs);
+            ew.setCapacidadDrfm(capacidadDrfm != null ? capacidadDrfm : false);
+            
+            if (esNuevaFicha) em.persist(ew); else em.merge(ew);
+            
+        // ARMAMENTO
+        } else if (categoriaId >= 201 && categoriaId <= 204) {
+            EspecificacionesArmamento armamento = em.find(EspecificacionesArmamento.class, medio.getId());
+            boolean esNuevaFicha = (armamento == null);
+            if (esNuevaFicha) { armamento = new EspecificacionesArmamento(); armamento.setMedio(medio); }
+            
+            armamento.setTipoGuia(tipoGuia);
+            armamento.setTipoObjetivo(tipoObjetivo);
+            armamento.setTecnologiaBuscador(tecnologiaBuscador);
+            armamento.setAlcanceMaxKm(alcanceMaxKm != null ? BigDecimal.valueOf(alcanceMaxKm) : null);
+            armamento.setVelocidadMaxMach(velArm != null ? BigDecimal.valueOf(velArm) : null);
+            armamento.setPesoOjivaKg(pesoOjivaKg != null ? BigDecimal.valueOf(pesoOjivaKg) : null);
+            
+            if (esNuevaFicha) em.persist(armamento); else em.merge(armamento);
         }
     }
+}
 
     @Transactional
     public void eliminarMedio(Integer id) {

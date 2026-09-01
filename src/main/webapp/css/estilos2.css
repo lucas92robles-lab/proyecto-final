@@ -302,233 +302,122 @@ details.menu-modulo[open] summary::after {
     color: var(--color-primario);
 }
 
-.btn-salir {
-    color: #dc2626; /* Rojo peligro */
-    text-decoration: none;
-    font-size: 0.85rem;
+/* ==========================================
+   ESTILOS PARA DETALLES DE MEDIOS
+   ========================================== */
+/* Nueva clase específica para no romper el .contenido global del dashboard */
+.contenido-fluido { 
+    padding: 0 !important; 
+    max-width: 100% !important; 
+    margin: 0 !important; 
 }
 
-/* --- ÁREA DE CONTENIDO (MAIN) --- */
-.contenido {
-    padding: 30px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-/* Tarjetas KPI (Indicadores clave) */
-.kpi-grid {
+.grid-detalle {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: 3fr 2fr; 
+    width: 100%;
+    min-height: calc(100vh - 60px); 
+    background-color: #d1d5db; 
+    align-items: start; 
 }
 
-.tarjeta-kpi {
-    background: white;
-    padding: 20px;
-    border-radius: 6px;
-    border-top: 4px solid var(--color-secundario);
-    box-shadow: var(--sombra-suave);
+.columna-texto {
+    padding: 30px 40px; 
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+    font-family: var(--fuente-tactica); 
+    font-size: 1.05rem; 
+    min-width: 0; 
 }
 
-.tarjeta-kpi h3 {
-    font-size: 0.85rem;
-    color: #64748b;
+.cabecera-detalle {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid #9ca3af;
+    padding-bottom: 10px;
+}
+
+.cabecera-detalle h1 {
+    font-size: 2rem;
     text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.tarjeta-kpi .numero {
-    font-size: 2.5rem;
-    font-weight: 700;
+    margin: 0;
     color: var(--color-primario);
 }
 
-/* ==========================================
-   GRILLA DE CATEGORÍAS VISUALES
-   ========================================== */
-.grilla-categorias {
-    display: grid;
-    /* Crea 3 columnas exactamente iguales. Si querés 4, cambiá el 3 por un 4 */
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 0; /* En tu figma están pegadas. Si querés separación, poné '15px' */
+.cabecera-detalle h2 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin: 0;
+    color: #374151;
+}
+
+.bloque-specs p {
+    margin: 6px 0;
+    color: #1f2937;
+    display: flex; 
+    align-items: baseline;
+}
+
+.bloque-specs strong {
+    min-width: 250px; 
+    flex-shrink: 0; 
+    display: inline-block;
+}
+
+.bloque-descripcion {
+    margin-top: 10px;
+    padding-top: 15px;
+    border-top: 1px dashed #9ca3af;
     width: 100%;
-    height: 100%; /* Para que ocupe todo el alto disponible */
-}
-/* Modificador para grilla de 4 columnas (ideal para radares) */
-.grilla-4-columnas {
-    grid-template-columns: repeat(4, 1fr);
 }
 
-/* Modificador para la grilla de Armamento (Mosaico 3x2) */
-.grilla-armamento {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr); /* Divide el alto en 2 filas iguales */
-}
-
-/* Clase para que la tarjeta ocupe dos filas hacia abajo */
-.span-2-filas {
-    grid-row: span 2;
-}
-
-/* La "caja" de cada categoría */
-.tarjeta-cat {
-    position: relative;
+.bloque-descripcion strong {
     display: block;
-    overflow: hidden;
-    text-decoration: none; /* Quita el subrayado del link */
-    /* aspect-ratio: 4/3;  <-- Descomentá esto si querés forzar que sean todas rectangulares iguales */
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: var(--color-primario);
 }
 
-/* La imagen adentro de la caja */
-.tarjeta-cat img {
+.bloque-descripcion p {
+    display: block;
+    text-align: justify; 
+    line-height: 1.6;
+    white-space: pre-wrap; 
+    margin: 0;
+}
+
+.columna-imagen {
+    width: 100%;
+    position: sticky; 
+    top: 0; 
+    height: calc(100vh - 60px); 
+}
+
+.columna-imagen img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* MAGIA: Llena la caja sin deformarse */
+    object-fit: cover; 
     object-position: center;
-    transition: transform 0.4s ease;
+    display: block; 
 }
 
-/* Efecto zoom táctico al pasar el mouse */
-.tarjeta-cat:hover img {
-    transform: scale(1.08);
-}
-
-/* El texto y su fondo protector */
-.tarjeta-cat-titulo {
-    position: absolute;
-    top: 0;
-    left: 0;
+.sin-imagen {
     width: 100%;
-    padding: 20px;
-    /* Gradiente oscuro arriba que se desvanece hacia abajo */
-    background: linear-gradient(to bottom, rgba(15, 37, 55, 0.8) 0%, rgba(15, 37, 55, 0) 100%);
-    
-    color: white; /* Texto blanco puro */
-    font-family: var(--fuente-tactica); /* IBM Plex Mono */
-    font-size: 1.5rem;
-    font-weight: 700; /* Bold */
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #9ca3af;
+    color: white;
+    font-size: 1.2rem;
 }
 
-
-/* estilos para detalles de medios */
-.contenido { 
-        padding: 0 !important; 
-        max-width: 100% !important; 
-        margin: 0 !important; 
-    }
-
-    .grid-detalle {
-        display: grid;
-        grid-template-columns: 3fr 2fr; /* 60% texto, 40% imagen */
-        width: 100%;
-        min-height: calc(100vh - 60px); 
-        background-color: #d1d5db; 
-        align-items: start; /* Permite que cada columna maneje su propio alto */
-    }
-
-    .columna-texto {
-        padding: 30px 40px; /* Reducimos el padding para aprovechar más el ancho */
-        display: flex;
-        flex-direction: column;
-        gap: 20px; /* Reducimos la separación entre bloques */
-        font-family: monospace; 
-        font-size: 1.05rem; /* Letra un pelín más ajustada */
-        min-width: 0; /* TRUCO CLAVE: evita que un texto largo rompa la grilla */
-    }
-
-    .cabecera-detalle {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        border-bottom: 2px solid #9ca3af;
-        padding-bottom: 10px;
-    }
-
-    .cabecera-detalle h1 {
-        font-size: 2rem;
-        text-transform: uppercase;
-        margin: 0;
-        color: #111827;
-    }
-
-    .cabecera-detalle h2 {
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        margin: 0;
-        color: #374151;
-    }
-
-    /* Estilos mejorados para los bloques de datos */
-    .bloque-specs p {
-        margin: 6px 0;
-        color: #1f2937;
-        display: flex; /* Alinea los textos largos a la derecha de la etiqueta */
-        align-items: baseline;
-    }
-    
-    .bloque-specs strong {
-        min-width: 250px; 
-        flex-shrink: 0; /* Evita que el título se achique si el valor es muy largo */
-        display: inline-block;
-    }
-
-    /* Estilo exclusivo para el texto largo de la descripción */
-    .bloque-descripcion {
-        margin-top: 10px;
-        padding-top: 15px;
-        border-top: 1px dashed #9ca3af;
-        width: 100%;
-    }
-
-    .bloque-descripcion strong {
-        display: block;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-        color: #111827;
-    }
-
-    .bloque-descripcion p {
-        display: block;
-        text-align: justify; /* Justificamos el texto para que quede prolijo */
-        line-height: 1.6;
-        white-space: pre-wrap; /* Respeta los párrafos y saltos de línea de la BD */
-        margin: 0;
-    }
-
-    /* Contenedor de la imagen fijado (Sticky) */
-    .columna-imagen {
-        width: 100%;
-        position: sticky; /* Hace que la imagen te acompañe al hacer scroll */
-        top: 0; 
-        height: calc(100vh - 60px); /* Ocupa el alto visible exacto de la pantalla */
-    }
-
-    .columna-imagen img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Evita deformaciones */
-        object-position: center;
-        display: block; /* Elimina márgenes fantasma */
-    }
-
-    .sin-imagen {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #9ca3af;
-        color: white;
-        font-family: monospace;
-        font-size: 1.2rem;
-    }
-
-    /*formularios de agregar */
-
-    .form-container { 
+/* ==========================================
+   FORMULARIOS Y CARGA DE DATOS
+   ========================================== */
+.form-container { 
     padding: 30px; 
     background-color: #f4f7f6; /* Unificado con el fondo del dashboard */
     min-height: calc(100vh - 60px); 
@@ -543,6 +432,17 @@ details.menu-modulo[open] summary::after {
     margin: 0 auto; 
 }
 
+.form-group { margin-bottom: 20px; }
+
+.titulo-seccion { 
+    color: var(--color-primario); 
+    border-bottom: 2px solid #e2e8f0; 
+    padding-bottom: 10px; 
+    margin-bottom: 20px; 
+    margin-top: 30px; 
+}
+
+/* Grilla de inputs unificada */
 .inputs-grid { 
     display: grid; 
     grid-template-columns: 200px 1fr; 
@@ -610,3 +510,16 @@ details.menu-modulo[open] summary::after {
     border-color: var(--color-secundario); 
     font-weight: bold; 
 }
+
+/* Botones genéricos de acción */
+.btn-primario {
+    background-color: var(--color-secundario);
+    color: var(--color-primario);
+    border: none;
+    font-family: var(--fuente-tactica);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: 4px;
+}
+.btn-primario:hover { background-color: #5bb3ff; }

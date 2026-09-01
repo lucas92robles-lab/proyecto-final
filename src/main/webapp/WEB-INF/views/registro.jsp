@@ -7,11 +7,9 @@
     <title>SITA // Ingreso</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
-<body class="login-body">
+<body>
 
-<div class="login-card">
-    <h2>NUEVO USUARIO</h2>
-
+<div class="pantalla-inicio">
     <!-- Evaluación de Expression Language (EL) y JSTL para mostrar el error si existe -->
     <c:if test="${not empty error}">
         <div class="error-msg">
@@ -19,25 +17,30 @@
         </div>
     </c:if>
 
+    <div class="inicio-titulo">
+            <h1>Sistema de catalogacion<br>de medios aeroespaciales</h1>
+    </div>
+
     <!-- El formulario apunta a la ruta de tu controlador POST -->
-    <form action="${pageContext.request.contextPath}/app/auth/registro" method="post">
+    <div class="caja-login">
+        <form action="${pageContext.request.contextPath}/app/auth/registro" method="post">
         
         <!-- Token CSRF-->
         <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}">
 
-        <div class="form-group">
-            <label for="username">USUARIO</label>
-            <input type="text" id="username" name="username" required autocomplete="off" class="form-control" placeholder="Ej: admin">
+        <div class="login-links">
+            <label for="username" class="label-tactico">Usuario</label>
+            <input type="text" id="username" name="username" required autocomplete="off" class="input-tactico" placeholder="Ej: admin">
         </div>
 
-        <div class="form-group">
-            <label for="password">CONTRASEÑA</label>
-            <input type="password" id="password" name="password" required class="form-control" placeholder="••••••••">
+        <div class="login-links">
+            <label for="password" class="label-tactico">Contraseña</label>
+            <input type="password" id="password" name="password" required class="input-tactico" placeholder="••••••••">
         </div>
 
-        <button type="submit" class="btn-primary">REGISTRAR NUEVO USUARIO</button>
-    </form>
-
+        <button type="submit" class="btn-ingresar">Registrar nuevo usuario</button>
+        </form>
+    </div>
 </div>
 </div>
 

@@ -1,108 +1,130 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
+<!-- Cargamos el layout principal -->
+<%@ include file="header.jsp" %>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>SITA // Detalle del Medio</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
-</head>
-<body>
-
-    <div class="navbar">
-        <div>
-            <strong>SISTEMA TÁCTICO // ISR</strong>
-            <a href="${pageContext.request.contextPath}/app/dashboard">Dashboard</a>
-            <a href="${pageContext.request.contextPath}/app/medios/orbat">ORBAT</a>
+<div class="grid-detalle">
+    
+    <!-- COLUMNA IZQUIERDA: TEXTO -->
+    <div class="columna-texto">
+        
+        <!-- Cabecera -->
+        <div class="cabecera-detalle">
+            <h1>${medio.nombre}</h1>
+            <h2>${medio.modelo != null ? medio.modelo : 'SIN MODELO'}</h2>
         </div>
-        <div>
-            <span>OP: ${usuarioSession.usuarioActual.username}</span>
-            <a href="${pageContext.request.contextPath}/app/auth/logout" class="btn-salir">Cerrar Sesión</a>
-        </div>
-    </div>
 
-    <div class="container">
-        <div class="panel-base">
-            <h2 class="detalle-header">DETALLE DE ACTIVO: ${medio.nombre}</h2>
-            
-            <p><strong>ID de Sistema:</strong> ${medio.id}</p>
-            <p><strong>Designación:</strong> ${medio.nombre}</p>
-            
-
-            <h3 class="detalle-titulo-seccion">Especificaciones Técnicas</h3>
-
-            <!-- ========================================== -->
-            <!-- 1. MÓDULO AÉREO                            -->
-            <!-- ========================================== -->
-            <!-- Evaluamos explícitamente si el objeto es distinto de nulo -->
+        <!-- Bloque 1: Especificaciones Específicas -->
+        <div class="bloque-specs">
+            <!-- 1. MÓDULO AÉREO -->
             <c:if test="${medio.especificacionesAereo != null}">
-                <div class="caja-especificaciones">
-                    <p><strong>Velocidad Máxima:</strong> ${medio.especificacionesAereo.velocidadMaxMach} Mach</p>
-                    <p><strong>Techo de Servicio:</strong> ${medio.especificacionesAereo.techoServicioPies} ft</p>
-                    <p><strong>Radio de Combate:</strong> ${medio.especificacionesAereo.radioCombateMillas} mn</p>
-                    <p><strong>Carga G Máxima:</strong> ${medio.especificacionesAereo.cargaGMaxima} G</p>
-                    <p><strong>Peso Máx. Despegue:</strong> ${medio.especificacionesAereo.pesoMaxDespegueLb} lb</p>
-                    <p><strong>Firma Radar (RCS):</strong> ${medio.especificacionesAereo.rcsM2} m²</p>
-                    <p><strong>Dimensiones:</strong> ${medio.especificacionesAereo.envergaduraPies} ft (Env) x ${medio.especificacionesAereo.longitudPies} ft (Lon)</p>
-                </div>
+                <p><strong>velocidad Max (Mach):</strong> <span>${medio.especificacionesAereo.velocidadMaxMach}</span></p>
+                <p><strong>techo Servicio (Pies):</strong> <span>${medio.especificacionesAereo.techoServicioPies}</span></p>
+                <p><strong>radio Combate (Millas):</strong> <span>${medio.especificacionesAereo.radioCombateMillas}</span></p>
+                <p><strong>carga G Maxima:</strong> <span>${medio.especificacionesAereo.cargaGMaxima}</span></p>
+                <p><strong>peso Max Despegue (Lb):</strong> <span>${medio.especificacionesAereo.pesoMaxDespegueLb}</span></p>
+                <p><strong>rcs (M2):</strong> <span>${medio.especificacionesAereo.rcsM2}</span></p>
+                <p><strong>envergadura (Pies):</strong> <span>${medio.especificacionesAereo.envergaduraPies}</span></p>
+                <p><strong>longitud (Pies):</strong> <span>${medio.especificacionesAereo.longitudPies}</span></p>
             </c:if>
 
-            <!-- ========================================== -->
-            <!-- 2. MÓDULO RADAR                            -->
-            <!-- ========================================== -->
-            <!-- Evaluamos explícitamente si el objeto es distinto de nulo -->
+            <!-- 2. MÓDULO RADAR -->
             <c:if test="${medio.especificacionesRadar != null}">
-                <div class="caja-especificaciones">
-                    <p><strong>Banda de Frecuencia:</strong> ${medio.especificacionesRadar.bandaFrecuencia}</p>
-                    <p><strong>Alcance de Detección:</strong> ${medio.especificacionesRadar.alcanceDeteccionKm} km</p>
-                    <p><strong>Tipo de Antena:</strong> ${medio.especificacionesRadar.tipoAntena}</p>
-                    <p><strong>Resolución de Distancia:</strong> ${medio.especificacionesRadar.resolucionDistanciaM} m</p>
-                    <p><strong>Potencia Pico:</strong> ${medio.especificacionesRadar.potenciaPicoKw} kW</p>
-                </div>
+                <p><strong>Banda de Frecuencia:</strong> <span>${medio.especificacionesRadar.bandaFrecuencia}</span></p>
+                <p><strong>Alcance Deteccion (Km):</strong> <span>${medio.especificacionesRadar.alcanceDeteccionKm}</span></p>
+                <p><strong>Tipo de Antena:</strong> <span>${medio.especificacionesRadar.tipoAntena}</span></p>
+                <p><strong>Resolucion Dist. (m):</strong> <span>${medio.especificacionesRadar.resolucionDistanciaM}</span></p>
+                <p><strong>Potencia Pico (kW):</strong> <span>${medio.especificacionesRadar.potenciaPicoKw}</span></p>
             </c:if>
 
-            <!-- ========================================== -->
-            <!-- 3. MÓDULO GUERRA ELECTRÓNICA (EW)          -->
-            <!-- ========================================== -->
+            <!-- 3. MÓDULO EW -->
             <c:if test="${medio.especificacionesEw != null}">
-                <div class="caja-especificaciones">
-                    <p><strong>Rango de Frecuencias:</strong> ${medio.especificacionesEw.rangoFrecuenciaMinMhz} - ${medio.especificacionesEw.rangoFrecuenciaMaxMhz} MHz</p>
-                    <p><strong>Modos de Operación:</strong> ${medio.especificacionesEw.modosOperacion}</p>
-                    <p><strong>Potencia Emisión (ERP):</strong> ${medio.especificacionesEw.potenciaEmisionErpKw} kW</p>
-                    <p><strong>Capacidad DRFM:</strong> ${medio.especificacionesEw.capacidadDrfm ? 'Sí' : 'No'}</p>
-                    <p><strong>Técnicas de Jamming:</strong> ${medio.especificacionesEw.tecnicasJamming}</p>
-                    <p><strong>Objetivos Simultáneos:</strong> ${medio.especificacionesEw.numeroObjetivosSimultaneos}</p>
-                </div>
+                <p><strong>Rango Frec. Min (MHz):</strong> <span>${medio.especificacionesEw.rangoFrecuenciaMinMhz}</span></p>
+                <p><strong>Rango Frec. Max (MHz):</strong> <span>${medio.especificacionesEw.rangoFrecuenciaMaxMhz}</span></p>
+                <p><strong>Modos Operacion:</strong> <span>${medio.especificacionesEw.modosOperacion}</span></p>
+                <p><strong>Potencia Emision (kW):</strong> <span>${medio.especificacionesEw.potenciaEmisionErpKw}</span></p>
+                <p><strong>Capacidad DRFM:</strong> <span>${medio.especificacionesEw.capacidadDrfm ? 'Sí' : 'No'}</span></p>
+                <p><strong>Tecnicas Jamming:</strong> <span>${medio.especificacionesEw.tecnicasJamming}</span></p>
+                <p><strong>Objetivos Simultaneos:</strong> <span>${medio.especificacionesEw.numeroObjetivosSimultaneos}</span></p>
             </c:if>
 
-            <!-- ========================================== -->
-            <!-- 4. MÓDULO ARMAMENTO                        -->
-            <!-- ========================================== -->
+            <!-- 4. MÓDULO ARMAMENTO -->
             <c:if test="${medio.especificacionesArmamento != null}">
-                <div class="caja-especificaciones">
-                    <p><strong>Tipo de Guía:</strong> ${medio.especificacionesArmamento.tipoGuia}</p>
-                    <p><strong>Tipo de Objetivo:</strong> ${medio.especificacionesArmamento.tipoObjetivo}</p>
-                    <p><strong>Alcance Máximo:</strong> ${medio.especificacionesArmamento.alcanceMaxKm} km</p>
-                    <p><strong>Velocidad Máxima:</strong> ${medio.especificacionesArmamento.velocidadMaxMach} Mach</p>
-                    <p><strong>Peso de la Ojiva:</strong> ${medio.especificacionesArmamento.pesoOjivaKg} kg</p>
-                    <p><strong>Tecnología del Buscador:</strong> ${medio.especificacionesArmamento.tecnologiaBuscador}</p>
-                </div>
+                <p><strong>Tipo Guia:</strong> <span>${medio.especificacionesArmamento.tipoGuia}</span></p>
+                <p><strong>Tipo Objetivo:</strong> <span>${medio.especificacionesArmamento.tipoObjetivo}</span></p>
+                <p><strong>Alcance Maximo (Km):</strong> <span>${medio.especificacionesArmamento.alcanceMaxKm}</span></p>
+                <p><strong>Velocidad Max (Mach):</strong> <span>${medio.especificacionesArmamento.velocidadMaxMach}</span></p>
+                <p><strong>Peso Ojiva (Kg):</strong> <span>${medio.especificacionesArmamento.pesoOjivaKg}</span></p>
+                <p><strong>Buscador:</strong> <span>${medio.especificacionesArmamento.tecnologiaBuscador}</span></p>
             </c:if>
+        </div>
 
-            <!-- ========================================== -->
-            <!-- MENSAJE SI NO HAY NINGUNA FICHA TÉCNICA    -->
-            <!-- ========================================== -->
-            <!-- Comprobamos si TODOS los objetos de especificaciones son nulos -->
-            <c:if test="${medio.especificacionesAereo == null and medio.especificacionesRadar == null and medio.especificacionesEw == null and medio.especificacionesArmamento == null}">
-                <p class="detalle-vacio">(No hay especificaciones técnicas cargadas para este activo en la base de datos).</p>
-            </c:if>
+        <!-- Bloque 2: Especificaciones Generales -->
+        <div class="bloque-specs">
+            <p><strong>pais Origen:</strong> <span>${medio.paisOrigen != null ? medio.paisOrigen : '-'}</span></p>
+            <p><strong>fabricante:</strong> <span>${medio.fabricante != null ? medio.fabricante : '-'}</span></p>
+            <p><strong>costo Adquisicion (MUsd):</strong> <span>${medio.costoAdquisicionMUsd != null ? medio.costoAdquisicionMUsd : '-'}</span></p>
+            <p><strong>costo Operativo Hora (Usd):</strong> <span>${medio.costoOperativoHoraUsd != null ? medio.costoOperativoHoraUsd : '-'}</span></p>
+            <p><strong>vida Util Horas:</strong> <span>${medio.vidaUtilHoras != null ? medio.vidaUtilHoras : '-'}</span></p>
+            <p><strong>año Introduccion:</strong> <span>${medio.añoIntroduccion != null ? medio.añoIntroduccion : '-'}</span></p>
+            <p><strong>tripulacion Dotacion:</strong> <span>${medio.tripulacionDotacion != null ? medio.tripulacionDotacion : '-'}</span></p>
+            <p><strong>inventario Estimado:</strong> <span>${medio.inventarioEstimado != null ? medio.inventarioEstimado : '-'}</span></p>
+            <p><strong>capacidad Prod. Anual:</strong> <span>${medio.capacidadProduccionAnual != null ? medio.capacidadProduccionAnual : '-'}</span></p>
+        </div>
 
-            <div>
-                <a href="javascript:history.back()" class="btn-volver">Volver al Listado</a>
+        <!-- BLOQUE EXCLUSIVO PARA DESCRIPCIÓN -->
+        <div class="bloque-descripcion">
+            <strong>descripción_general:</strong>
+            <p>${medio.descripcion != null ? medio.descripcion : 'Sin descripción detallada.'}</p>
+        </div>
+
+        <!-- Bloque 3: Integraciones Futuras -->
+        <div class="bloque-specs">
+            <p><strong>armasIntegradas:</strong> <span>(para agregar despues)</span></p>
+            <p><strong>plataformasCompatibles:</strong> <span>(para agregar despues)</span></p>
+            <p><strong>operadores paises:</strong> <span>(para agregar despues)</span></p>
+        </div>
+
+        <!-- BARRA DE ACCIONES INFERIOR -->
+        <div style="margin-top: 40px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #9ca3af; padding-top: 20px;">
+            
+            <!-- Izquierda: Volver -->
+            <a href="${pageContext.request.contextPath}/app/medios/listado" class="btn" style="background: #9ca3af; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: var(--fuente-tactica);">
+                Volver al Listado
+            </a>
+            
+            <!-- Derecha: Editar y Eliminar -->
+            <div style="display: flex; gap: 10px;">
+                <a href="${pageContext.request.contextPath}/app/medios/editar/${medio.id}" class="btn" style="background: var(--color-secundario); color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: var(--fuente-tactica);">
+                    Editar Activo
+                </a>
+                
+                <!-- Solo mostramos el botón de eliminar si el usuario actual es ADMIN -->
+                <c:if test="${usuarioSession.usuarioActual.rol == 'ADMIN'}">
+                    <a href="${pageContext.request.contextPath}/app/medios/eliminar/${medio.id}" 
+                       onclick="return confirm('ATENCIÓN: ¿Está seguro que desea ELIMINAR permanentemente este activo táctico? Esta acción no se puede deshacer.');" 
+                       class="btn" style="background: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: var(--fuente-tactica);">
+                        Eliminar
+                    </a>
+                </c:if>
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- COLUMNA DERECHA: IMAGEN -->
+    <div class="columna-imagen">
+        <c:choose>
+            <c:when test="${not empty medio.imagenUrl}">
+                <img src="${medio.imagenUrl}" alt="Imagen de ${medio.nombre}">
+            </c:when>
+            <c:otherwise>
+                <div class="sin-imagen">SIN IMAGEN DISPONIBLE</div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+</div>
+
+<!-- Cerramos el layout -->
+<%@ include file="footer.jsp" %>
