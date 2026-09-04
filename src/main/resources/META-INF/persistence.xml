@@ -19,6 +19,7 @@
                       value="neondb_owner"/>
             <property name="jakarta.persistence.jdbc.password"
                       value="npg_VJX5e7WDtKcd"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
 
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
