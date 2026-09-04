@@ -45,6 +45,17 @@ public class MedioController {
         return "categorias-aereas.jsp"; 
     }
 
+    @GET
+    @Path("/aereo/{subcategoria}")
+    public String moduloAereoFiltrado(@PathParam("subcategoria") String subcategoria) {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        
+        List<MedioListDTO> lista = medioService.obtenerPorFiltroEspecifico(subcategoria); 
+        models.put("medios", lista);
+        models.put("tituloModulo", "MÓDULO AÉREO - " + subcategoria.toUpperCase());
+        return "listado.jsp"; 
+    }
+
     // --- MÓDULO RADAR ---
     @GET
     @Path("/radar")
@@ -55,6 +66,17 @@ public class MedioController {
         models.put("medios", lista);
         models.put("tituloModulo", "MÓDULO RADAR");
         return "categorias-radares.jsp"; 
+    }
+
+    @GET
+    @Path("/radar/{subcategoria}")
+    public String moduloRadarFiltrado(@PathParam("subcategoria") String subcategoria) {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        
+        List<MedioListDTO> lista = medioService.obtenerPorFiltroEspecifico(subcategoria); 
+        models.put("medios", lista);
+        models.put("tituloModulo", "MÓDULO RADAR - " + subcategoria.toUpperCase());
+        return "listado.jsp"; 
     }
 
     // --- MÓDULO EW (Guerra Electrónica) ---
@@ -69,7 +91,18 @@ public class MedioController {
         return "categorias-ew.jsp"; 
     }
 
-    // --- MÓDULO armamento ---
+    @GET
+    @Path("/ew/{subcategoria}")
+    public String moduloEwFiltrado(@PathParam("subcategoria") String subcategoria) {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        
+        List<MedioListDTO> lista = medioService.obtenerPorFiltroEspecifico(subcategoria); 
+        models.put("medios", lista);
+        models.put("tituloModulo", "MÓDULO EW - " + subcategoria.toUpperCase());
+        return "listado.jsp"; 
+    }
+
+    // --- MÓDULO ARMAMENTO ---
     @GET
     @Path("/armamento")
     public String moduloArmamento() {
@@ -81,8 +114,18 @@ public class MedioController {
         return "categorias-armamento.jsp"; 
     }
 
+    @GET
+    @Path("/armamento/{subcategoria}")
+    public String moduloArmamentoFiltrado(@PathParam("subcategoria") String subcategoria) {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        
+        List<MedioListDTO> lista = medioService.obtenerPorFiltroEspecifico(subcategoria); 
+        models.put("medios", lista);
+        models.put("tituloModulo", "MÓDULO ARMAMENTO - " + subcategoria.toUpperCase());
+        return "listado.jsp"; 
+    }
+
     // --- LISTADO ---
-    // --- MÓDULO ORBAT ---
     @GET
     @Path("/listado")
     public String listado(@QueryParam("categoria") String categoria) {
@@ -91,13 +134,10 @@ public class MedioController {
         List<MedioListDTO> lista;
         String titulo;
 
-        // Verificamos si viene el parámetro en la URL
         if (categoria != null && !categoria.trim().isEmpty()) {
-            // Si hay filtro (ej: caza, ataque, elint), llamamos al servicio con ese filtro
             lista = medioService.obtenerPorFiltroEspecifico(categoria); 
             titulo = "ORBAT - FILTRO: " + categoria.toUpperCase();
         } else {
-            // Si entra desde el menú principal (sin filtro), traemos todo
             lista = medioService.obtenerTodos(); 
             titulo = "Listado completo de medios";
         }
@@ -113,16 +153,11 @@ public class MedioController {
     public String verDetalles(@PathParam("id") Integer id) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
         
-        // Buscamos toda la ficha técnica usando el servicio
         MedioDetalleDTO detalle = medioService.obtenerPorId(id);
         
-        // Si el usuario ingresa un ID que no existe en la URL, lo devolvemos al listado
         if (detalle == null) return "redirect:medios/listado"; 
         
-        // Guardamos el objeto para que Expression Language (${medio.nombre}) lo lea en la vista
         models.put("medio", detalle);
-        
-        // Retornamos la vista correspondiente
         return "detalle-medio.jsp";
     }
 
@@ -137,14 +172,14 @@ public class MedioController {
         return "formulario-medio.jsp";
     }
 
-    // 2. Mostrar formulario con datos (EDITAR)
+    // Mostrar formulario con datos (para editar un medio existente)
     @GET
     @Path("/editar/{id}")
     public String editarMedio(@PathParam("id") Integer id) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
         
         MedioDetalleDTO detalle = medioService.obtenerPorId(id);
-        if (detalle == null) return "redirect:medios/orbat";
+        if (detalle == null) return "redirect:medios/listado"; 
         
         models.put("medio", detalle); 
         models.put("tituloFormulario", "EDITAR ACTIVO: " + detalle.getNombre());
@@ -153,60 +188,53 @@ public class MedioController {
         return "formulario-medio.jsp";
     }
 
-    // 3. Recibir los datos del formulario (POST)
+    // Recibir los datos del formulario
     @POST
     @Path("/guardar")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String guardarMedio(
-            @FormParam("id") Integer id, 
-            @FormParam("nombre") String nombre,
-            @FormParam("categoriaId") Integer categoriaId,
-            @FormParam("paisId") Integer paisId,
-            @FormParam("fabricanteId") Integer fabricanteId,
+        // ... (Tu bloque de @FormParams queda exactamente igual) ...
+        @FormParam("id") Integer id, 
+        @FormParam("nombre") String nombre,
+        @FormParam("categoriaId") Integer categoriaId,
+        @FormParam("paisId") Integer paisId,
+        @FormParam("fabricanteId") Integer fabricanteId,
+        @FormParam("modelo") String modelo,
+        @FormParam("imagenUrl") String imagenUrl,
+        @FormParam("añoIntroduccion") String strAno,
+        @FormParam("costoAdquisicion") String strCostoAdq,
+        @FormParam("costoOperativo") String strCostoOp,
+        @FormParam("descripcion") String descripcion,
+        
+        @FormParam("velocidadMaxMach") String strVelocidad,
+        @FormParam("techoServicioPies") String strTecho,
+        @FormParam("radioCombateMillas") String strRadio,
+        @FormParam("cargaGMaxima") String strCarga,
+        @FormParam("pesoMaxDespegueLb") String strPeso,
+        @FormParam("rcsM2") String strRcs,
+        @FormParam("envergaduraPies") String strEnv,
+        @FormParam("longitudPies") String strLon,
 
-            // Nuevos datos generales
-            @FormParam("modelo") String modelo,
-            @FormParam("imagenUrl") String imagenUrl,
-            @FormParam("añoIntroduccion") String strAno,
-            @FormParam("costoAdquisicion") String strCostoAdq,
-            @FormParam("costoOperativo") String strCostoOp,
-            @FormParam("descripcion") String descripcion,
-            
-            // Nota: Para PaisOrigen tendrías que recibir el ID y buscarlo, por ahora lo omitimos en la firma o lo manejás como String temporal
-            
-            // Aéreo
-            @FormParam("velocidadMaxMach") String strVelocidad,
-            @FormParam("techoServicioPies") String strTecho,
-            @FormParam("radioCombateMillas") String strRadio,
-            @FormParam("cargaGMaxima") String strCarga,
-            @FormParam("pesoMaxDespegueLb") String strPeso,
-            @FormParam("rcsM2") String strRcs,
-            @FormParam("envergaduraPies") String strEnv,
-            @FormParam("longitudPies") String strLon,
+        @FormParam("bandaFrecuencia") String bandaFrecuencia,
+        @FormParam("alcanceDeteccionKm") String strAlcanceDeteccion,
+        @FormParam("potenciaPicoKw") String strPotencia,
+        @FormParam("tipoAntena") String tipoAntena,
+        @FormParam("resolucionDistanciaM") String strRes,
 
-            // Radar
-            @FormParam("bandaFrecuencia") String bandaFrecuencia,
-            @FormParam("alcanceDeteccionKm") String strAlcanceDeteccion,
-            @FormParam("potenciaPicoKw") String strPotencia,
-            @FormParam("tipoAntena") String tipoAntena,
-            @FormParam("resolucionDistanciaM") String strRes,
+        @FormParam("rangoFrecuenciaMinMhz") String strRangoMin,
+        @FormParam("rangoFrecuenciaMaxMhz") String strRangoMax,
+        @FormParam("modosOperacion") String modosOperacion,
+        @FormParam("potenciaEmisionErpKw") String strErp,
+        @FormParam("tecnicasJamming") String tecnicasJamming,
+        @FormParam("numeroObjetivosSimultaneos") String strObjs,
+        @FormParam("capacidadDrfm") String strDrfm,
 
-            // EW
-            @FormParam("rangoFrecuenciaMinMhz") String strRangoMin,
-            @FormParam("rangoFrecuenciaMaxMhz") String strRangoMax,
-            @FormParam("modosOperacion") String modosOperacion,
-            @FormParam("potenciaEmisionErpKw") String strErp,
-            @FormParam("tecnicasJamming") String tecnicasJamming,
-            @FormParam("numeroObjetivosSimultaneos") String strObjs,
-            @FormParam("capacidadDrfm") String strDrfm,
-
-            // Armamento
-            @FormParam("tipoGuia") String tipoGuia,
-            @FormParam("tipoObjetivo") String tipoObjetivo,
-            @FormParam("tecnologiaBuscador") String tecnologiaBuscador,
-            @FormParam("alcanceMaxKm") String strAlcanceArma,
-            @FormParam("velocidadMaxMachArm") String strVelArm,
-            @FormParam("pesoOjivaKg") String strOjiva
+        @FormParam("tipoGuia") String tipoGuia,
+        @FormParam("tipoObjetivo") String tipoObjetivo,
+        @FormParam("tecnologiaBuscador") String tecnologiaBuscador,
+        @FormParam("alcanceMaxKm") String strAlcanceArma,
+        @FormParam("velocidadMaxMachArm") String strVelArm,
+        @FormParam("pesoOjivaKg") String strOjiva
     ) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
         
@@ -242,7 +270,6 @@ public class MedioController {
         Double velArm = (strVelArm != null && !strVelArm.isBlank()) ? Double.valueOf(strVelArm) : null;
         Double pesoOjivaKg = (strOjiva != null && !strOjiva.isBlank()) ? Double.valueOf(strOjiva) : null;
 
-        // Llamamos al servicio con todo
         medioService.guardarMedioCompleto(id, nombre, categoriaId, paisId, fabricanteId,
                 modelo, imagenUrl, anoIntro, costoAdq, costoOp, descripcion,
                 velocidadMaxMach, techoServicioPies, radioCombateMillas, cargaGMaxima, pesoMaxDespegueLb, rcsM2, envPies, lonPies,
@@ -260,9 +287,9 @@ public class MedioController {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
         
         String rolUsuario = usuarioSession.getUsuarioActual().getRol();
-        if (!"ADMIN".equals(rolUsuario)) return "redirect:medios/orbat"; 
+        if (!"ADMIN".equals(rolUsuario)) return "redirect:medios/listado"; 
         
         medioService.eliminarMedio(id);
-        return "redirect:medios/orbat?exito=eliminado"; 
+        return "redirect:medios/listado?exito=eliminado"; 
     }
 }

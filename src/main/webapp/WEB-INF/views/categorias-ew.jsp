@@ -1,14 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!-- 1. Cargamos el layout -->
 <%@ include file="header.jsp" %>
 
-<!-- 2. Quitamos el padding para que la grilla ocupe toda la pantalla -->
 <style>
     .contenido { padding: 0; }
 </style>
 
-<!-- 3. Grilla de 4 columnas para Guerra Electrónica (EW) -->
 <div class="grilla-categorias grilla-4-columnas">
     
     <!-- Categoría 1: ATAQUE ELECTRÓNICO -->
@@ -37,5 +34,4 @@
 
 </div>
 
-<!-- 4. Cerramos el layout -->
 <%@ include file="footer.jsp" %>

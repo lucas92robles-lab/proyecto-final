@@ -17,7 +17,7 @@ public class EspecificacionesRadar {
     private Integer id;
 
     @OneToOne
-    @MapsId                          // El PK de esta tabla ES la FK al padre
+    @MapsId                          
     
     @JoinColumn(name = "medio_id")
     private Medio medio;

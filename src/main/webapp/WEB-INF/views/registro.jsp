@@ -21,7 +21,6 @@
             <h1>Sistema de catalogacion<br>de medios aeroespaciales</h1>
     </div>
 
-    <!-- El formulario apunta a la ruta de tu controlador POST -->
     <div class="caja-login">
         <form action="${pageContext.request.contextPath}/app/auth/registro" method="post">
         

@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!-- Cargamos el layout principal -->
 <%@ include file="header.jsp" %>
 
 <div class="grid-detalle">
@@ -126,5 +125,4 @@
 
 </div>
 
-<!-- Cerramos el layout -->
 <%@ include file="footer.jsp" %>

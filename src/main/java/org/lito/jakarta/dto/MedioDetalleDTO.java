@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class MedioDetalleDTO {
     
-    // Campos base
+
     private Integer id;
     private String nombre;
     private String modelo;
@@ -21,7 +21,6 @@ public class MedioDetalleDTO {
     private String capacidadProduccionAnual;
     private String descripcion;
 
-    // Especificaciones opcionales — solo una tendrá valor según el tipo
     private EspecificacionesAereoDTO especificacionesAereo;
     private EspecificacionesEwDTO especificacionesEw;
     private EspecificacionesRadarDTO especificacionesRadar;
@@ -29,8 +28,7 @@ public class MedioDetalleDTO {
 
     public MedioDetalleDTO() {}
 
-    // —— Getters y Setters base ——
-
+   
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

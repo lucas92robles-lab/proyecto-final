@@ -11,7 +11,7 @@
 
     <div class="navbar">
         <div>
-            <strong>SITA // PANEL ADMIN //</strong>
+            <strong> PANEL ADMIN //</strong>
             <a href="${pageContext.request.contextPath}/app/dashboard">Volver al Dashboard</a>
             <span style="color: #ccc; margin: 0 10px;">|</span>
             <a href="${pageContext.request.contextPath}/app/categorias">Categorías</a>

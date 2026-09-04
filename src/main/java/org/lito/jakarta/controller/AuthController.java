@@ -12,7 +12,7 @@ import org.lito.jakarta.service.AuthService;
 import org.lito.jakarta.session.UsuarioSession;
 
 @Path("/auth")
-@Controller // Le indicamos a Jakarta que esto manejará vistas MVC
+@Controller 
 public class AuthController {
 
     @Inject
@@ -22,16 +22,16 @@ public class AuthController {
     private AuthService authService; // Conexión a la base de datos
 
     @Inject
-    private Models models; // Para pasarle mensajes de error a la vista
+    private Models models; 
 
-    // Muestra la pantalla del formulario
+    // La pantalla del formulario
     @GET
     @Path("/login")
     public String mostrarLogin() {
       return "login.jsp";
     }
 
-    // Procesa los datos enviados desde el formulario HTML
+    // Procesa los datos del formulario HTML
     @POST
     @Path("/login")
     public String procesarLogin(@FormParam("username") String username,
@@ -53,7 +53,7 @@ public class AuthController {
         }
     }
 
-    // Cierra la sesión y borra la memoria
+    // Cierra la sesión
     @GET
     @Path("/logout")
     public String cerrarSesion() {

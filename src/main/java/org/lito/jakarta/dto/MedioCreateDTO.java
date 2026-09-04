@@ -3,7 +3,7 @@ package org.lito.jakarta.dto;
 import java.math.BigDecimal;
 
 public class MedioCreateDTO {
-    // IDs de las relaciones — el cliente manda IDs, no objetos completos
+    
     private String nombre;
     private String modelo;
     private Integer fabricanteId;

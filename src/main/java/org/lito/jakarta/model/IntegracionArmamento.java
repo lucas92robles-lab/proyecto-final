@@ -13,12 +13,12 @@ public class IntegracionArmamento {
     @Id
     private Integer id;
 
-    // La plataforma que dispara (ej: F-35)
+   
     @ManyToOne
     @JoinColumn(name = "medio_plataforma_id")
     private Medio plataforma;
 
-    // El misil que puede llevar (ej: AIM-120)
+   
     @ManyToOne
     @JoinColumn(name = "medio_misil_id")
     private Medio misil;

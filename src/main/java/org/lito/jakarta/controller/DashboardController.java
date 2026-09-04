@@ -7,15 +7,15 @@ import jakarta.ws.rs.Path;
 import org.lito.jakarta.session.UsuarioSession;
 
 @Path("/dashboard")
-@Controller // Le indica a Jakarta MVC que esta clase manejará vistas[cite: 8]
+@Controller 
 public class DashboardController {
 
     @Inject
-    private UsuarioSession usuarioSession; // Inyectamos la sesión para verificar seguridad
+    private UsuarioSession usuarioSession; 
 
     @GET
     public String mostrarDashboard() {
-        // Validación de seguridad básica: si no está logueado, lo pateamos al login
+        // Validación de seguridad si no está logueado, al login
         if (usuarioSession.getUsuarioActual() == null || !usuarioSession.isLogueado()) {
             return "redirect:auth/login";
         }

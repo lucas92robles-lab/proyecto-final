@@ -1,9 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!-- 1. Cargamos el menú lateral y barra superior -->
 <%@ include file="header.jsp" %>
 
-<!-- 2. Quitamos el padding del main temporalmente para que la grilla toque los bordes como en tu Figma -->
 <style>
     .contenido { padding: 0; } 
 </style>
@@ -42,12 +40,10 @@
 
     <!-- Categoría 6: AGREGAR NUEVO -->
     <a href="${pageContext.request.contextPath}/app/medios/nuevo" class="tarjeta-cat">
-        <!-- Podes usar un gradiente o una foto de fábrica como tenés en Figma -->
         <img src="${pageContext.request.contextPath}/img/cat-fabrica.jpg" alt="Agregar Nuevo Medio">
         <div class="tarjeta-cat-titulo">AGREGAR NUEVO</div>
     </a>
 
 </div>
 
-<!-- 3. Cerramos la estructura -->
 <%@ include file="footer.jsp" %>

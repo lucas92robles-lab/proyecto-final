@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!-- Cargamos el layout principal (Navbar y Sidebar) -->
 <%@ include file="header.jsp" %>
 
 <script>
@@ -202,5 +201,4 @@
     </div>
 </div>
 
-<!-- Cerramos el layout principal -->
 <%@ include file="footer.jsp" %>

@@ -2,6 +2,8 @@ Proyecto final - SISTEMA DE CATALOGACION DE MEDIOS AEROESPACIALES
 Alumno: Lucas Robles
 Entrega final - 80%
 
+https://github.com/lucas92robles-lab/proyecto-final/
+
 1. Descripción General
 El SISTEMA DE CATALOGACION DE MEDIOS AEROESPACIALES permite la gestión integral de las especificaciones técnicas que poseen las principales entidades y sistemas que tienen incidencia en el poder aeroespacial actual.
 
@@ -51,6 +53,9 @@ Tiempo esperado: La compilación y descarga del servidor embebido toma entre 1 y
 
 Acceso:
 Una vez que la terminal indique que el servidor ha iniciado, ingresar en el navegador a: ("http://localhost:8080/tactica01/app/auth/login")
+
+Usuario: admin  
+contraseña: admin123
 
 5. Próximos pasos (Faltante para el 100%)
 Para la presentación final, se implementarán las siguientes funcionalidades que completarán el flujo del sistema:

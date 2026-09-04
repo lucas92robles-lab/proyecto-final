@@ -1,10 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!-- Cargamos el layout -->
 <%@ include file="header.jsp" %>
 
-<!-- Encabezado dinámico de la sección -->
 <div class="tarjeta-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: white; border-bottom: 1px solid #e2e8f0;">
     <div>
         <h2 style="color: var(--color-primario); font-size: 1.5rem; margin-bottom: 5px;">
@@ -68,5 +66,4 @@
     </div>
 </div>
 
-<!-- Cerramos el layout -->
 <%@ include file="footer.jsp" %>
