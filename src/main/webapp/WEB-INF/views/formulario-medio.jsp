@@ -5,7 +5,6 @@
 <%@ include file="header.jsp" %>
 
 <script>
-    // Lógica para mostrar/ocultar las especificaciones según el tipo elegido
     function cambiarTipoMedio(esCargaInicial) {
         document.getElementById('bloqueAereo').style.display = 'none';
         document.getElementById('bloqueRadar').style.display = 'none';
@@ -23,7 +22,6 @@
         }
     }
 
-    // Ejecutar al cargar la página (para el modo Editar)
     window.onload = function() {
         if (document.getElementById('tipoSelect') && document.getElementById('tipoSelect').value !== "") {
             cambiarTipoMedio(true);
@@ -39,7 +37,6 @@
 
         <form action="${pageContext.request.contextPath}/app/medios/guardar" method="post">
             
-            <!-- Token CSRF y campo oculto de ID para diferenciar Crear de Editar -->
             <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}">
             <input type="hidden" name="id" value="${medio.id}">
             
@@ -54,8 +51,27 @@
                 <label>URL de Imagen:</label> 
                 <input type="url" name="imagenUrl" value="${medio.imagenUrl}" placeholder="https://ejemplo.com/imagen.jpg">
                 
+                <!-- NUEVO: DESPLEGABLE DE PAÍS -->
                 <label>País de Origen:</label> 
-                <input type="text" name="paisOrigen" value="${medio.paisOrigen}" placeholder="Ej: Estados Unidos">
+                <select name="paisId">
+                    <option value="">-- Seleccione un País --</option>
+                    <c:forEach var="pais" items="${paises}">
+                        <option value="${pais.id}" ${medio.paisOrigen == pais.nombre ? 'selected' : ''}>
+                            ${pais.nombre}
+                        </option>
+                    </c:forEach>
+                </select>
+                
+                <!-- NUEVO: DESPLEGABLE DE FABRICANTE -->
+                <label>Fabricante:</label> 
+                <select name="fabricanteId">
+                    <option value="">-- Seleccione un Fabricante --</option>
+                    <c:forEach var="fab" items="${fabricantes}">
+                        <option value="${fab.id}" ${medio.fabricante == fab.nombre ? 'selected' : ''}>
+                            ${fab.nombre}
+                        </option>
+                    </c:forEach>
+                </select>
                 
                 <label>Año de Introducción:</label> 
                 <input type="number" name="añoIntroduccion" value="${medio.añoIntroduccion}">

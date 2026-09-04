@@ -132,6 +132,8 @@ public class MedioController {
     public String nuevoMedio() {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
         models.put("tituloFormulario", "NUEVO ACTIVO TÁCTICO");
+        models.put("paises", medioService.obtenerTodosLosPaises());
+        models.put("fabricantes", medioService.obtenerTodosLosFabricantes());
         return "formulario-medio.jsp";
     }
 
@@ -146,6 +148,8 @@ public class MedioController {
         
         models.put("medio", detalle); 
         models.put("tituloFormulario", "EDITAR ACTIVO: " + detalle.getNombre());
+        models.put("paises", medioService.obtenerTodosLosPaises());
+        models.put("fabricantes", medioService.obtenerTodosLosFabricantes());
         return "formulario-medio.jsp";
     }
 
@@ -157,7 +161,9 @@ public class MedioController {
             @FormParam("id") Integer id, 
             @FormParam("nombre") String nombre,
             @FormParam("categoriaId") Integer categoriaId,
-            
+            @FormParam("paisId") Integer paisId,
+            @FormParam("fabricanteId") Integer fabricanteId,
+
             // Nuevos datos generales
             @FormParam("modelo") String modelo,
             @FormParam("imagenUrl") String imagenUrl,
@@ -165,6 +171,7 @@ public class MedioController {
             @FormParam("costoAdquisicion") String strCostoAdq,
             @FormParam("costoOperativo") String strCostoOp,
             @FormParam("descripcion") String descripcion,
+            
             // Nota: Para PaisOrigen tendrías que recibir el ID y buscarlo, por ahora lo omitimos en la firma o lo manejás como String temporal
             
             // Aéreo
@@ -236,7 +243,7 @@ public class MedioController {
         Double pesoOjivaKg = (strOjiva != null && !strOjiva.isBlank()) ? Double.valueOf(strOjiva) : null;
 
         // Llamamos al servicio con todo
-        medioService.guardarMedioCompleto(id, nombre, categoriaId, 
+        medioService.guardarMedioCompleto(id, nombre, categoriaId, paisId, fabricanteId,
                 modelo, imagenUrl, anoIntro, costoAdq, costoOp, descripcion,
                 velocidadMaxMach, techoServicioPies, radioCombateMillas, cargaGMaxima, pesoMaxDespegueLb, rcsM2, envPies, lonPies,
                 bandaFrecuencia, alcanceDeteccionKm, potenciaPicoKw, tipoAntena, resolucionDist,

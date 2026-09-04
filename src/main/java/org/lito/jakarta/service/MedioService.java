@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.lito.jakarta.model.Medio;
+import org.lito.jakarta.model.Pais;
 import org.lito.jakarta.model.Categoria;
 import org.lito.jakarta.model.EspecificacionesAereo; 
 import org.lito.jakarta.model.EspecificacionesRadar;
+import org.lito.jakarta.model.Fabricante;
 import org.lito.jakarta.model.EspecificacionesEw;
 import org.lito.jakarta.model.EspecificacionesArmamento;
 import org.lito.jakarta.dto.MedioDetalleDTO;
@@ -189,7 +191,7 @@ public class MedioService {
     } 
 
     @Transactional
-    public void guardarMedioCompleto(Integer id, String nombre, Integer categoriaId,    
+    public void guardarMedioCompleto(Integer id, String nombre, Integer categoriaId, Integer paisId, Integer fabricanteId,   
                                 String modelo, String imagenUrl, Integer añoIntro, Double costoAdq, Integer costoOp, String descripcion,
                                 Double velocidadMaxMach, Integer techoServicioPies, Integer radioCombateMillas, Double cargaGMaxima, Double pesoMaxDespegueLb, Double rcsM2, Double envPies, Double lonPies,
                                 String bandaFrecuencia, Double alcanceDeteccionKm, Double potenciaPicoKw, String tipoAntena, Double resolucionDist,
@@ -219,6 +221,14 @@ public class MedioService {
         medio.setCategoria(cat);
     }
 
+    if (paisId != null && paisId > 0) {
+        medio.setPaisOrigen(em.find(Pais.class, paisId));
+    }
+    
+    if (fabricanteId != null && fabricanteId > 0) {
+            medio.setFabricante(em.find(Fabricante.class, fabricanteId));
+    }
+    
     if (esNuevoMedio) em.persist(medio); else em.merge(medio);
     
     if (categoriaId != null) {
@@ -285,6 +295,7 @@ public class MedioService {
             if (esNuevaFicha) em.persist(armamento); else em.merge(armamento);
         }
     }
+    
 }
 
     @Transactional
@@ -293,5 +304,15 @@ public class MedioService {
         if (medioAEliminar != null) {
             em.remove(medioAEliminar);
         }
+    }
+
+    /* Obtener todos los países */
+        public List<org.lito.jakarta.model.Pais> obtenerTodosLosPaises() {
+        return em.createQuery("SELECT p FROM Pais p ORDER BY p.nombre", org.lito.jakarta.model.Pais.class).getResultList();
+    }
+
+    /* Obtener todos los fabricantes */
+    public List<org.lito.jakarta.model.Fabricante> obtenerTodosLosFabricantes() {
+        return em.createQuery("SELECT f FROM Fabricante f ORDER BY f.nombre", org.lito.jakarta.model.Fabricante.class).getResultList();
     }
 }
