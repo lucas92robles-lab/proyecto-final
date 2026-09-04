@@ -10,15 +10,15 @@
         <jta-data-source>java:/jdbc/TacticaDS</jta-data-source>
 
         <properties>
-            <!-- Conexión directa para desarrollo -->
+            <!-- Conexión directa a Neon Tech -->
             <property name="jakarta.persistence.jdbc.driver"
                       value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:postgresql://localhost:5432/tactica_db"/>
+                      value="jdbc:postgresql://ep-wandering-surf-a50ns2i1.us-east-2.aws.neon.tech/neondb?sslmode=require"/>
             <property name="jakarta.persistence.jdbc.user"
-                      value="admin"/>
+                      value="neondb_owner"/>
             <property name="jakarta.persistence.jdbc.password"
-                      value="adminpassword"/>
+                      value="npg_VJX5e7WDtKcd"/>
 
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
