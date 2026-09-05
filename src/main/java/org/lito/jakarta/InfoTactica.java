@@ -5,14 +5,13 @@ import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.ws.rs.ApplicationPath;
 
 @DataSourceDefinition(
-    name = "java:/jdbc/TacticaDS", // Esto DEBE coincidir con el <jta-data-source> de tu persistence.xml
+    name = "java:/jdbc/TacticaDS",
     className = "org.postgresql.ds.PGSimpleDataSource",
-    url = "jdbc:postgresql://localhost:5432/tactica_db", // Reemplazá "tactica_db" por el nombre de tu BD en pgAdmin
-    user = "admin", // POSTGRES_USER del docker-compose.yml
-    password = "adminpassword" // POSTGRES_PASSWORD del docker-compose.yml
+    url = "jdbc:postgresql://ep-wandering-surf-a50ns2i1.us-east-2.aws.neon.tech/neondb?sslmode=require",
+    user = "neondb_owner",
+    password = "npg_VJX5e7WDtKcd"
 )
-
-@ApplicationPath("/app") // API REST
+@ApplicationPath("/app")
 public class InfoTactica extends Application {
     
 }
