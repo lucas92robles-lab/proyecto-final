@@ -8,7 +8,7 @@ https://github.com/lucas92robles-lab/proyecto-final/
 El SISTEMA DE CATALOGACION DE MEDIOS AEROESPACIALES permite la gestión integral de las especificaciones técnicas que poseen las principales entidades y sistemas que tienen incidencia en el poder aeroespacial actual.
 
 2. Tecnologías Utilizadas
-Lenguaje: Java 17+
+Lenguaje: Java 25+
 Framework Backend: Jakarta EE / Jakarta MVC
 Jakarta Persistence API (JPA) / Hibernate
 Base de Datos: PostgreSQL
@@ -33,7 +33,7 @@ Se utilizó JSP con JSTL (`<c:forEach>`, `<c:if>`) para manejar la lógica de pr
 Atendiendo a la devolución de la entrega del 50%, se preparó este método de ejecución utilizando el plugin de Maven para WildFly. No es necesario descargar, instalar ni configurar una distribución completa de WildFly de forma manual.
 
 Prerrequisitos:
-Tener Java 17+.
+Tener Java 25+.
 Tener PostgreSQL corriendo en el puerto 5432.
 
 Pasos para probar el sistema:
