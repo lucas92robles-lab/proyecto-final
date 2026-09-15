@@ -20,8 +20,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>
-        <maven.compiler.release>25</maven.compiler.release>
+        <project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>        <maven.compiler.release>17</maven.compiler.release>
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
         <wildfly.version>35.0.1.Final</wildfly.version>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
@@ -56,14 +55,14 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.12</version>
+            <version>42.7.3</version>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>tactica01</finalName>
         <plugins>
-            <!-- Compilador Java 25 -->
+            <!-- Compilador Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
