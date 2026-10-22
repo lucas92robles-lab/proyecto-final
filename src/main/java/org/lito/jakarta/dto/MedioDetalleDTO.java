@@ -12,6 +12,8 @@ public class MedioDetalleDTO {
     private String paisOrigen;
     private String fabricante;
     private String imagenUrl;
+    private String imagenUrl2;
+    private String imagenUrl3;
     private Integer añoIntroduccion;
     private BigDecimal costoAdquisicionMUsd;
     private Integer costoOperativoHoraUsd;
@@ -27,7 +29,6 @@ public class MedioDetalleDTO {
     private EspecificacionesArmamentoDTO especificacionesArmamento;
 
     public MedioDetalleDTO() {}
-
    
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -49,6 +50,12 @@ public class MedioDetalleDTO {
 
     public String getImagenUrl() { return imagenUrl; }
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+
+    public String getImagenUrl2() { return imagenUrl2; }
+    public void setImagenUrl2(String imagenUrl2) { this.imagenUrl2 = imagenUrl2; }
+
+    public String getImagenUrl3() { return imagenUrl3; }
+    public void setImagenUrl3(String imagenUrl3) { this.imagenUrl3 = imagenUrl3; }
 
     public Integer getAñoIntroduccion() { return añoIntroduccion; }
     public void setAñoIntroduccion(Integer añoIntroduccion) { this.añoIntroduccion = añoIntroduccion; }

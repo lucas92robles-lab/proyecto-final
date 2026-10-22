@@ -13,7 +13,7 @@
     <div class="pantalla-inicio">
         <!-- Mitad Izquierda: Título -->
         <div class="inicio-titulo">
-            <h1>Sistema de catalogacion<br>de medios aeroespaciales</h1>
+            <h1>Sistema de catalogación<br>de medios aeroespaciales</h1>
         </div>
 
         <!-- Mitad Derecha: Formulario -->

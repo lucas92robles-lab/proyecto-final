@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Catálogo de Medios</title>
-    <!-- Actualizado a tu archivo de estilos -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
 <body>
@@ -13,49 +12,50 @@
     <div class="app-contenedor">
         
         <!-- SIDEBAR (Menú Lateral) -->
-        <!-- SIDEBAR (Menú Lateral) -->
         <aside class="sidebar">
             <div class="sidebar-header">
-               <!-- Sistema de catalogación<br>de medios aeroespaciales -->
-                SisCaM
+               SisCaM
             </div>
             
             <div class="sidebar-menu">
-                <!-- Ahora usa la clase compartida y no tiene estilos en línea -->
                 <a href="${pageContext.request.contextPath}/app/dashboard" class="enlace-modulo">Inicio</a>
                 
                 <details class="menu-modulo">
                     <summary>Aeronaves</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/aereo">Ver Aeronaves</a>
-                        <a href="${pageContext.request.contextPath}/app/medios/nuevo">Registrar Aeronave</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/aereo/listado">Ver Aeronaves</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/aereo">Categorías</a>
                     </div>
                 </details>
 
                 <details class="menu-modulo">
                     <summary>Radares</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/radar">Ver Radares</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/radar/listado">Ver Radares</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/radar">Categorías</a>
                     </div>
                 </details>
 
-                <!-- AGREGADO: Menú Armamento -->
                 <details class="menu-modulo">
                     <summary>Armamento</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/armamento">Ver Armamento</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/armamento/listado">Ver Armamento</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/armamento">Categorías</a>
                     </div>
                 </details>
 
                 <details class="menu-modulo">
                     <summary>EW</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/ew">Ver Sistemas EW</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/ew/listado">Ver Sistemas EW</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/ew">Categorías</a>
                     </div>
                 </details>
                 
-                <!-- Ahora usa la clase enlace-modulo para verse idéntico a las categorías -->
                 <a href="${pageContext.request.contextPath}/app/medios/listado" class="enlace-modulo">Totalidad de medios</a>
+                
+                <!-- AGREGADO: Opción para nuevo elemento al final -->
+                <a href="${pageContext.request.contextPath}/app/medios/nuevo" class="enlace-modulo" style="margin-top: 15px;">Agregar nuevo elemento</a>
             </div>
         </aside>
 
@@ -64,10 +64,12 @@
             
             <header class="topbar">
                 <div class="buscador-global">
-                    <input type="text" placeholder="Buscar matrícula, nombre o modelo...">
+                    <form action="${pageContext.request.contextPath}/app/medios/buscar" method="GET" style="display: flex; width: 100%;">
+                    <input type="text" name="q" placeholder="Buscar matrícula, nombre o modelo..." required style="width: 100%;">
+                </form>
                 </div>
                 <div class="topbar-usuario">
-                    <!-- Acá inyectamos la variable exacta de tu código anterior -->
+                    <!-- Muestra el usuario -->
                     <span>Operador: ${usuarioSession.usuarioActual.username}</span> 
                     <a href="${pageContext.request.contextPath}/app/auth/logout" class="btn-salir">[ SALIR ]</a>
                 </div>

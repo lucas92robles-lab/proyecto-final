@@ -111,17 +111,51 @@
         </div>
     </div>
 
-    <!-- COLUMNA DERECHA: IMAGEN -->
+    <!-- COLUMNA DERECHA: IMAGENES -->
+    <div class="columna-imagen" style="display: flex; flex-direction: column; gap: 15px;">
+        
+        <!-- Imagen 1 (Principal) -->
+        <c:if test="${not empty medio.imagenUrl}">
+            <div>
+                <img src="${pageContext.request.contextPath}${medio.imagenUrl}" alt="Imagen 1 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
+            </div>
+        </c:if>
+
+        <!-- Imagen 2 -->
+        <c:if test="${not empty medio.imagenUrl2}">
+            <div>
+                <img src="${pageContext.request.contextPath}${medio.imagenUrl2}" alt="Imagen 2 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
+            </div>
+        </c:if>
+
+        <!-- Imagen 3 -->
+        <c:if test="${not empty medio.imagenUrl3}">
+            <div>
+                <img src="${pageContext.request.contextPath}${medio.imagenUrl3}" alt="Imagen 3 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
+            </div>
+        </c:if>
+
+        <!-- Si ninguna tiene valor -->
+        <c:if test="${empty medio.imagenUrl and empty medio.imagenUrl2 and empty medio.imagenUrl3}">
+            <div class="sin-imagen" style="padding: 20px; text-align: center; background: #edf2f7; border-radius: 6px; color: #718096;">
+                SIN IMÁGENES DISPONIBLES
+            </div>
+        </c:if>
+    </div>
+
+
+    <!--
     <div class="columna-imagen">
         <c:choose>
             <c:when test="${not empty medio.imagenUrl}">
-                <img src="${medio.imagenUrl}" alt="Imagen de ${medio.nombre}">
+                <img src="${pageContext.request.contextPath}${medio.imagenUrl}" alt="Imagen de ${medio.nombre}">
             </c:when>
             <c:otherwise>
                 <div class="sin-imagen">SIN IMAGEN DISPONIBLE</div>
             </c:otherwise>
         </c:choose>
-    </div>
+    </div>  -->
+
 
 </div>
 

@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +100,8 @@ public class MedioService {
         // Mapeo de campos generales
         dto.setModelo(medio.getModelo());
         dto.setImagenUrl(medio.getImagenUrl());
+        dto.setImagenUrl2(medio.getImagenUrl2());
+        dto.setImagenUrl3(medio.getImagenUrl3());
         dto.setAñoIntroduccion(medio.getAñoIntroduccion());
         dto.setCostoAdquisicionMUsd(medio.getCostoAdquisicionMUsd());
         dto.setCostoOperativoHoraUsd(medio.getCostoOperativoHoraUsd());
@@ -192,7 +195,7 @@ public class MedioService {
 
     @Transactional
     public void guardarMedioCompleto(Integer id, String nombre, Integer categoriaId, Integer paisId, Integer fabricanteId,   
-                                String modelo, String imagenUrl, Integer añoIntro, Double costoAdq, Integer costoOp, String descripcion,
+                                String modelo, String imagenUrl, String imagenUrl2, String imagenUrl3, Integer añoIntro, Double costoAdq, Integer costoOp, String descripcion,
                                 Double velocidadMaxMach, Integer techoServicioPies, Integer radioCombateMillas, Double cargaGMaxima, Double pesoMaxDespegueLb, Double rcsM2, Double envPies, Double lonPies,
                                 String bandaFrecuencia, Double alcanceDeteccionKm, Double potenciaPicoKw, String tipoAntena, Double resolucionDist,
                                 Double rangoFrecuenciaMinMhz, Double rangoFrecuenciaMaxMhz, String modosOperacion, Double potErp, String tecnicasJamming, Integer numObjs, Boolean capacidadDrfm,
@@ -211,6 +214,8 @@ public class MedioService {
     medio.setNombre(nombre);
     medio.setModelo(modelo);
     medio.setImagenUrl(imagenUrl);
+    medio.setImagenUrl2(imagenUrl2);
+    medio.setImagenUrl3(imagenUrl3);
     medio.setAñoIntroduccion(añoIntro);
     medio.setCostoAdquisicionMUsd(costoAdq != null ? BigDecimal.valueOf(costoAdq) : null);
     medio.setCostoOperativoHoraUsd(costoOp);
@@ -314,5 +319,28 @@ public class MedioService {
     /* Obtener todos los fabricantes */
     public List<org.lito.jakarta.model.Fabricante> obtenerTodosLosFabricantes() {
         return em.createQuery("SELECT f FROM Fabricante f ORDER BY f.nombre", org.lito.jakarta.model.Fabricante.class).getResultList();
+    }
+
+    // busqueda
+    // Búsqueda (Ahora devuelve DTOs como el resto del sistema)
+    @Transactional
+    public List<MedioListDTO> buscarActivos(String busqueda) {
+        if (busqueda == null || busqueda.trim().isEmpty()) {
+            return new ArrayList<>(); 
+        }
+        
+        String patron = "%" + busqueda.trim() + "%";
+        String jpql = "SELECT m FROM Medio m WHERE " +
+                    "LOWER(m.nombre) LIKE LOWER(:patron) OR " +
+                    "LOWER(m.modelo) LIKE LOWER(:patron)"; 
+        
+        List<Medio> medios = em.createQuery(jpql, Medio.class)
+                .setParameter("patron", patron)
+                .getResultList();
+                
+        // Convertimos las entidades crudas a DTOs para que listado.jsp no se rompa
+        return medios.stream()
+                .map(this::convertirAListDTO)
+                .collect(Collectors.toList());
     }
 }

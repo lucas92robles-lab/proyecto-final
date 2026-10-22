@@ -1,43 +1,51 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
 
-<style>
-    .contenido { padding: 0; }
-</style>
 
-<!-- Grilla para Armamento -->
-<div class="grilla-categorias grilla-armamento">
+<div class="header-categorias">
+    <h2>Categorías de Armamento</h2>
+</div>
+
+<div class="carrusel-categorias">
     
-    <!-- Categoría 1 AIRE-AIRE -->
-    <a href="${pageContext.request.contextPath}/app/medios/orbat?categoria=aire-aire" class="tarjeta-cat">
+    <!-- Categoría 1: AIRE-AIRE -->
+    <a href="${pageContext.request.contextPath}/app/medios/armamento/aire-aire" class="tarjeta-deslizable">
+        <div class="tarjeta-deslizable-titulo">AIRE-AIRE</div>
         <img src="${pageContext.request.contextPath}/img/cat-arm-aire.jpg" alt="Misiles Aire-Aire">
-        <div class="tarjeta-cat-titulo">AIRE-AIRE</div>
     </a>
 
-    <!-- Categoría 2  AIRE-SUPERFICIE -->
-    <a href="${pageContext.request.contextPath}/app/medios/orbat?categoria=aire-superficie" class="tarjeta-cat">
+    <!-- Categoría 2: AIRE-SUPERFICIE -->
+    <a href="${pageContext.request.contextPath}/app/medios/armamento/aire-superficie" class="tarjeta-deslizable">
+        <div class="tarjeta-deslizable-titulo">AIRE-SUPERFICIE</div>
         <img src="${pageContext.request.contextPath}/img/cat-arm-superficie.jpg" alt="Misiles Aire-Superficie">
-        <div class="tarjeta-cat-titulo">AIRE-SUPERFICIE</div>
     </a>
 
-    <!-- Categoría 3  AGREGAR NUEVO -->
-    <a href="${pageContext.request.contextPath}/app/medios/nuevo-armamento" class="tarjeta-cat span-2-filas">
-        <img src="${pageContext.request.contextPath}/img/cat-arm-nuevo.jpg" alt="Agregar Nuevo Armamento">
-        <div class="tarjeta-cat-titulo">AGREGAR<br>NUEVO</div>
-    </a>
-
-    <!-- Categoría 4 LANZABLE -->
-    <a href="${pageContext.request.contextPath}/app/medios/orbat?categoria=lanzable" class="tarjeta-cat">
+    <!-- Categoría 3: LANZABLE -->
+    <a href="${pageContext.request.contextPath}/app/medios/armamento/lanzable" class="tarjeta-deslizable">
+        <div class="tarjeta-deslizable-titulo">LANZABLE</div>
         <img src="${pageContext.request.contextPath}/img/cat-arm-lanzable.jpg" alt="Armamento Lanzable (Bombas)">
-        <div class="tarjeta-cat-titulo">LANZABLE</div>
     </a>
 
-    <!-- Categoría 5  COHETES-CAÑONES -->
-    <a href="${pageContext.request.contextPath}/app/medios/orbat?categoria=cohetes-canones" class="tarjeta-cat">
+    <!-- Categoría 4: COHETES-CAÑONES -->
+    <a href="${pageContext.request.contextPath}/app/medios/armamento/cohetes-canones" class="tarjeta-deslizable">
+        <div class="tarjeta-deslizable-titulo">COHETES<br>CAÑONES</div>
         <img src="${pageContext.request.contextPath}/img/cat-arm-canones.jpg" alt="Cohetes y Cañones">
-        <div class="tarjeta-cat-titulo">COHETES-CAÑONES</div>
     </a>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const carrusel = document.querySelector('.carrusel-categorias');
+        if (carrusel) {
+            carrusel.addEventListener('wheel', function(e) {
+                // Si el usuario mueve la ruedita, prevenimos que la página baje
+                e.preventDefault();
+                // Y en su lugar, movemos el scroll horizontalmente
+                carrusel.scrollLeft += e.deltaY;
+            });
+        }
+    });
+</script>
 
 <%@ include file="footer.jsp" %>

@@ -52,6 +52,12 @@ public class Medio {
     @Column(name = "imagen_url")
     private String imagenUrl;
 
+    @Column(name = "imagen_url_2")
+    private String imagenUrl2;
+
+    @Column(name = "imagen_url_3")
+    private String imagenUrl3;
+
     // Relaciones con especificaciones (opcionales, pueden ser null)
     @OneToOne(mappedBy = "medio", cascade = CascadeType.ALL, optional = true)
     private EspecificacionesAereo especificacionesAereo;
@@ -78,7 +84,7 @@ public class Medio {
     public Medio(Integer id, String nombre, String modelo, Fabricante fabricante, Categoria categoria, Pais paisOrigen,
             BigDecimal costoAdquisicionMUsd, Integer costoOperativoHoraUsd, Integer vidaUtilHoras,
             Integer añoIntroduccion, String tripulacionDotacion, String inventarioEstimado,
-            String capacidadProduccionAnual, String descripcion, String imagenUrl,
+            String capacidadProduccionAnual, String descripcion, String imagenUrl, String imagenUrl2, String imagenUrl3,
             EspecificacionesAereo especificacionesAereo, EspecificacionesEw especificacionesEw,
             EspecificacionesRadar especificacionesRadar, EspecificacionesArmamento especificacionesMisil,
             List<IntegracionArmamento> armasIntegradas, List<IntegracionArmamento> plataformasCompatibles,
@@ -105,6 +111,8 @@ public class Medio {
         this.armasIntegradas = armasIntegradas;
         this.plataformasCompatibles = plataformasCompatibles;
         this.operadores = operadores;
+        this.imagenUrl2 = imagenUrl2;
+        this.imagenUrl3 = imagenUrl3;
     }
 
     public Medio() {
@@ -229,6 +237,12 @@ public class Medio {
     public void setImagenUrl(String imagenUrl) {
         this.imagenUrl = imagenUrl;
     }
+
+    public String getImagenUrl2() { return imagenUrl2; }
+    public void setImagenUrl2(String imagenUrl2) { this.imagenUrl2 = imagenUrl2; }
+    
+    public String getImagenUrl3() { return imagenUrl3; }
+    public void setImagenUrl3(String imagenUrl3) { this.imagenUrl3 = imagenUrl3; }
 
     public EspecificacionesAereo getEspecificacionesAereo() {
         return especificacionesAereo;

@@ -1,4 +1,4 @@
-/* Importar IBM Plex Mono de Google Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
 
 :root {
@@ -6,6 +6,7 @@
     --color-secundario: #3d97e1;
     --fuente-tactica: 'IBM Plex Mono', monospace;
     --texto-claro: #e2e8f0;
+    --fondo-var1: #c1bfd3;
 }
 
 * {
@@ -320,7 +321,18 @@ details.menu-modulo[open] summary::after {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    margin-left: 2rem;
+    margin-right: 2rem;
     margin-bottom: 30px;
+}
+
+.tarjeta {
+    padding: 2rem; 
+    margin: 2rem; 
+    background-color: var(--fondo-var1); /* Fondo blanco para que destaque */
+    border-radius: 10px; /* Bordes redondeados suaves */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Sombra sutil para darle volumen */
+    margin-bottom: 2rem;
 }
 
 .tarjeta-kpi {
@@ -501,9 +513,12 @@ details.menu-modulo[open] summary::after {
     /* Contenedor de la imagen fijado (Sticky) */
     .columna-imagen {
         width: 100%;
-        position: sticky; /* Hace que la imagen te acompañe al hacer scroll */
+        position: sticky; /* sticky Hace que la imagen te acompañe al hacer scroll */
         top: 0; 
-        height: calc(100vh - 60px); /* Ocupa el alto visible exacto de la pantalla */
+        overflow-y: scroll; /* Permite que la imagen se desplace si es más alta que la pantalla */
+        padding-right: 5px;
+
+        /*height: calc(100vh - 60px);  Ocupa el alto visible exacto de la pantalla */
     }
 
     .columna-imagen img {
@@ -528,25 +543,24 @@ details.menu-modulo[open] summary::after {
 
     /*formularios de agregar */
 
-    .form-container { 
+.form-container { 
     padding: 30px; 
-    background-color: #f4f7f6; /* Unificado con el fondo del dashboard */
+    background-color: var(--fondo-var1);
     min-height: calc(100vh - 60px); 
 }
 
 .form-tarjeta { 
-    background: white; 
-    padding: 30px; 
-    border-radius: 8px; 
+    background: rgb(190, 188, 216); 
+    padding: 20px; 
+    border-radius: 5px; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Unificado con topbar */
-    max-width: 900px; 
-    margin: 0 auto; 
+    /*max-width: 900px; margin: 0 auto;  */
 }
 
 .inputs-grid { 
     display: grid; 
     grid-template-columns: 200px 1fr; 
-    gap: 15px; 
+    gap: 25px 20px; 
     align-items: center; 
 }
 
@@ -559,12 +573,14 @@ details.menu-modulo[open] summary::after {
 .inputs-grid input, 
 .inputs-grid select, 
 .inputs-grid textarea { 
-    padding: 8px 12px; 
+    padding: 12px 15px; 
     width: 100%; 
     box-sizing: border-box; 
     border: 1px solid #cbd5e1; 
-    border-radius: 4px; 
-    font-family: var(--fuente-tactica); /* Aplicamos tu tipografía a los inputs */
+    border-radius: 5px; 
+    font-family: var(--fuente-tactica); 
+    background-color: #ffffff;
+    transition: border-color 0.3s ease;
 }
 
 .inputs-grid textarea { 
@@ -572,6 +588,12 @@ details.menu-modulo[open] summary::after {
     min-height: 80px; 
 }
 
+.titulo-seccion {
+    margin-top: 40px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0; 
+}
 /* Selector de Categorías (Botones Radio) */
 .bloque-tipo { 
     display: none; 
@@ -610,3 +632,75 @@ details.menu-modulo[open] summary::after {
     border-color: var(--color-secundario); 
     font-weight: bold; 
 }
+
+/* Contenedor principal del carrusel */
+.carrusel-categorias {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px;
+    scrollbar-width: thin;
+}
+
+/* Tarjeta individual */
+.tarjeta-deslizable {
+    flex: 0 0 320px; /* Ancho fijo de 320px, no se achica */
+    height: 450px; 
+    position: relative;
+    scroll-snap-align: start;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.tarjeta-deslizable:hover {
+    transform: scale(1.02);
+}
+
+/* Imagen de fondo que ocupa toda la tarjeta */
+.tarjeta-deslizable img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Título sobre la imagen */
+.tarjeta-deslizable-titulo {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+    line-height: 1.2;
+    z-index: 2;
+}
+
+
+/* Sombra oscura arriba para garantizar que el texto se lea */
+.tarjeta-deslizable::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+    z-index: 1;
+}
+
+    
+.header-categorias {
+    padding: 30px 40px 10px 40px;
+    }
+    
+.header-categorias h2 {
+        color: var(--color-primario);
+        margin: 0;
+        text-transform: uppercase;
+    }

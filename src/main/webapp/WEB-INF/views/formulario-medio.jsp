@@ -27,6 +27,43 @@
         }
     };
 </script>
+<!-- SCRIPT FETCH PARA SUBIDA EN SEGUNDO PLANO -->
+<script>
+function subirImagen(indice) {
+    const fileInput = document.getElementById('file' + indice);
+    const previewDiv = document.getElementById('preview' + indice);
+    
+    if (!fileInput.files || fileInput.files.length === 0) return;
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    previewDiv.innerHTML = '<span style="color: #3182ce;">Subiendo a C:\\tactica-subidas\\...</span>';
+
+    fetch('${pageContext.request.contextPath}/app/imagenes/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error al subir la imagen');
+        return response.json();
+    })
+    .then(data => {
+        if (data.url) {
+            const targetId = indice === 1 ? 'imagenUrl' : ('imagenUrl' + indice);
+            document.getElementById(targetId).value = data.url;
+            previewDiv.innerHTML = '<span style="color: #38a169;">✔ ' + data.url + '</span>';
+        } else {
+            throw new Error(data.error || 'Respuesta inválida');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        previewDiv.innerHTML = '<span style="color: #e53e3e;">✖ Error al subir archivo</span>';
+    });
+}
+</script>
 
 <div class="form-container">
     <div class="form-tarjeta">
@@ -34,23 +71,53 @@
             ${empty medio.id ? 'Alta de Nuevo' : 'Editar'} Activo Táctico
         </h2>
 
-        <form action="${pageContext.request.contextPath}/app/medios/guardar" method="post">
+        <form action="${pageContext.request.contextPath}/app/medios/guardar" method="post" accept-charset="UTF-8">
             
             <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}">
             <input type="hidden" name="id" value="${medio.id}">
             
             <h3 class="titulo-seccion">Datos Generales</h3>
             <div class="inputs-grid">
-                <label>Nombre/Designación (*):</label> 
+                <label>Nombre/Designación:</label> 
                 <input type="text" name="nombre" value="${medio.nombre}" required placeholder="Ej: F-16 Fighting Falcon">
                 
                 <label>Modelo/Variante:</label> 
                 <input type="text" name="modelo" value="${medio.modelo}" placeholder="Ej: Block 50">
                 
-                <label>URL de Imagen:</label> 
-                <input type="url" name="imagenUrl" value="${medio.imagenUrl}" placeholder="https://ejemplo.com/imagen.jpg">
+                <label for="imagen1">Imagen 1:</label>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <input type="file" id="file1" accept="image/*" onchange="subirImagen(1)">
+                    <input type="hidden" id="imagenUrl" name="imagenUrl" value="${medio.imagenUrl}">
+                    <div id="preview1">
+                        <c:if test="${not empty medio.imagenUrl}">
+                            <span>Guardado: ${medio.imagenUrl}</span>
+                        </c:if>
+                    </div>
+                </div>
+
+                <label for="imagen2">Imagen 2 (opcional):</label>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <input type="file" id="file2" accept="image/*" onchange="subirImagen(2)">
+                    <input type="hidden" id="imagenUrl2" name="imagenUrl2" value="${medio.imagenUrl2}">
+                    <div id="preview2">
+                        <c:if test="${not empty medio.imagenUrl2}">
+                            <span>Guardado: ${medio.imagenUrl2}</span>
+                        </c:if>
+                    </div>
+                </div>
                 
-                <!-- NUEVO: DESPLEGABLE DE PAÍS -->
+                <label for="imagen3">Imagen 3 (opcional):</label>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <input type="file" id="file3" accept="image/*" onchange="subirImagen(3)">
+                    <input type="hidden" id="imagenUrl3" name="imagenUrl3" value="${medio.imagenUrl3}">
+                    <div id="preview3">
+                        <c:if test="${not empty medio.imagenUrl3}">
+                            <span>Guardado: ${medio.imagenUrl3}</span>
+                        </c:if>
+                    </div>
+                </div>
+
+                    
                 <label>País de Origen:</label> 
                 <select name="paisId">
                     <option value="">-- Seleccione un País --</option>
