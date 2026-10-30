@@ -18,7 +18,7 @@
 <!-- Contenedor de la Tabla -->
 <div style="padding: 30px;">
     <div class="tarjeta" style="padding: 0; overflow: hidden;">
-        <table class="tabla-tactica" style="width: 100%; border-collapse: collapse;">
+        <table class="tabla-tactica">
             <thead>
                 <tr style="background-color: #e2e8f0; border-bottom: 2px solid #cbd5e1; text-align: left;">
                     <th style="padding: 12px 15px;">Nombre / Matrícula</th>

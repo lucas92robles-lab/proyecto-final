@@ -62,17 +62,26 @@
         <!-- COLUMNA PRINCIPAL -->
         <div class="columna-principal">
             
-            <header class="topbar">
-                <div class="buscador-global">
-                    <form action="${pageContext.request.contextPath}/app/medios/buscar" method="GET" style="display: flex; width: 100%;">
-                    <input type="text" name="q" placeholder="Buscar matrícula, nombre o modelo..." required style="width: 100%;">
-                </form>
-                </div>
-                <div class="topbar-usuario">
-                    <!-- Muestra el usuario -->
-                    <span>Operador: ${usuarioSession.usuarioActual.username}</span> 
-                    <a href="${pageContext.request.contextPath}/app/auth/logout" class="btn-salir">[ SALIR ]</a>
-                </div>
-            </header>
+        <header class="topbar">
+            <div class="buscador-global">
+                <form action="${pageContext.request.contextPath}/app/medios/buscar" method="GET" style="display: flex; width: 100%;">
+                <input type="text" name="q" placeholder="Buscar matrícula, nombre o modelo..." required style="width: 100%;">
+            </form>
+            </div>
+            <div class="topbar-usuario">
+                <!-- Muestra el usuario -->
+                <span>Operador: ${usuarioSession.usuarioActual.username}</span> 
 
-            <main class="contenido">
+                <!-- Botón visible solo para administradores -->
+                <c:if test="${not empty usuarioSession.usuarioActual && usuarioSession.usuarioActual.rol == 'ADMIN'}">
+                    <a href="${pageContext.request.contextPath}/app/admin/panel" 
+                    style="background: #1e3a8a; color: #fff; padding: 8px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #3b82f6;">
+                         Panel de Administración
+                    </a>
+                </c:if>
+
+                <a href="${pageContext.request.contextPath}/app/auth/logout" class="btn-salir">[ SALIR ]</a>
+            </div>
+        </header>
+
+        <main class="contenido">

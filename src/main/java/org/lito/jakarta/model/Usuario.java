@@ -1,5 +1,4 @@
 package org.lito.jakarta.model;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +21,23 @@ public class Usuario {
     private String password;
 
     @Column(nullable = false)
-    private String rol; // Ej: "ADMIN" o "VISITANTE"
+    private String rol; 
+
+    @Column (nullable = false)
+    private Integer edad;
+
+    @Column (nullable = false)
+    private String email;
+
+    @Column 
+    private String telefono;
+
+    @Column 
+    private String direccion;
+
+    @Column 
+    private String dependencia;
+
 
     public Usuario() {
     }
@@ -58,4 +73,45 @@ public class Usuario {
     public void setRol(String rol) {
         this.rol = rol;
     }
+
+    public Integer getEdad() {
+        return edad;
+    }
+
+    public void setEdad(Integer edad) {
+        this.edad = edad;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getDependencia() {
+        return dependencia;
+    }
+
+    public void setDependencia(String dependencia) {
+        this.dependencia = dependencia;
+    }
+  
 }

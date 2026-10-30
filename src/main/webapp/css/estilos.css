@@ -6,7 +6,7 @@
     --color-secundario: #3d97e1;
     --fuente-tactica: 'IBM Plex Mono', monospace;
     --texto-claro: #e2e8f0;
-    --fondo-var1: #c1bfd3;
+    --fondo-var1: #33a2aa;
 }
 
 * {
@@ -21,6 +21,7 @@ body, html {
     height: 100%;
     font-family: var(--fuente-tactica);
     background-color: var(--color-primario);
+    overflow: hidden; 
 }
 
 /* Contenedor que ocupa toda la pantalla y tiene el fondo de planos */
@@ -29,6 +30,7 @@ body, html {
     background-image: url('../img/fondo-login.png'); 
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,8 +58,15 @@ body, html {
     box-shadow: 0 15px 30px rgba(0,0,0,0.7);
     border: 1px solid rgba(255,255,255,0.05);
     text-align: right;
+
+    max-height: 82vh;  
+    overflow-y: auto;
 }
 
+.tabla-tactica {
+    width:  100%; 
+    border-collapse: collapse;
+}
 
 /* Inputs tácticos */
 .input-tactico {
@@ -138,6 +147,13 @@ body, html {
 
 .login-links a:hover {
     color: var(--color-secundario);
+}
+
+.registro {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    flex-direction: column;
+    
 }
 
 /* Modificador para la pantalla de aviso/recuperación */

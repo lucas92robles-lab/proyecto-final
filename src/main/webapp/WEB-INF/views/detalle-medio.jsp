@@ -18,12 +18,12 @@
         <div class="bloque-specs">
             <!-- 1. MÓDULO AÉREO -->
             <c:if test="${medio.especificacionesAereo != null}">
-                <p><strong>velocidad Max (Mach):</strong> <span>${medio.especificacionesAereo.velocidadMaxMach}</span></p>
-                <p><strong>techo Servicio (Pies):</strong> <span>${medio.especificacionesAereo.techoServicioPies}</span></p>
-                <p><strong>radio Combate (Millas):</strong> <span>${medio.especificacionesAereo.radioCombateMillas}</span></p>
-                <p><strong>carga G Maxima:</strong> <span>${medio.especificacionesAereo.cargaGMaxima}</span></p>
-                <p><strong>peso Max Despegue (Lb):</strong> <span>${medio.especificacionesAereo.pesoMaxDespegueLb}</span></p>
-                <p><strong>rcs (M2):</strong> <span>${medio.especificacionesAereo.rcsM2}</span></p>
+                <p><strong>Velocidad Max (Mach):</strong> <span>${medio.especificacionesAereo.velocidadMaxMach}</span></p>
+                <p><strong>Techo de Servicio (Pies):</strong> <span>${medio.especificacionesAereo.techoServicioPies}</span></p>
+                <p><strong>Radio de combate (Millas):</strong> <span>${medio.especificacionesAereo.radioCombateMillas}</span></p>
+                <p><strong>Carga G Maxima:</strong> <span>${medio.especificacionesAereo.cargaGMaxima}</span></p>
+                <p><strong>Peso Max Despegue (Lb):</strong> <span>${medio.especificacionesAereo.pesoMaxDespegueLb}</span></p>
+                <p><strong>RCS (M2):</strong> <span>${medio.especificacionesAereo.rcsM2}</span></p>
                 <p><strong>envergadura (Pies):</strong> <span>${medio.especificacionesAereo.envergaduraPies}</span></p>
                 <p><strong>longitud (Pies):</strong> <span>${medio.especificacionesAereo.longitudPies}</span></p>
             </c:if>
@@ -61,15 +61,15 @@
 
         <!-- Bloque 2: Especificaciones Generales -->
         <div class="bloque-specs">
-            <p><strong>pais Origen:</strong> <span>${medio.paisOrigen != null ? medio.paisOrigen : '-'}</span></p>
-            <p><strong>fabricante:</strong> <span>${medio.fabricante != null ? medio.fabricante : '-'}</span></p>
-            <p><strong>costo Adquisicion (MUsd):</strong> <span>${medio.costoAdquisicionMUsd != null ? medio.costoAdquisicionMUsd : '-'}</span></p>
-            <p><strong>costo Operativo Hora (Usd):</strong> <span>${medio.costoOperativoHoraUsd != null ? medio.costoOperativoHoraUsd : '-'}</span></p>
-            <p><strong>vida Util Horas:</strong> <span>${medio.vidaUtilHoras != null ? medio.vidaUtilHoras : '-'}</span></p>
-            <p><strong>año Introduccion:</strong> <span>${medio.añoIntroduccion != null ? medio.añoIntroduccion : '-'}</span></p>
-            <p><strong>tripulacion Dotacion:</strong> <span>${medio.tripulacionDotacion != null ? medio.tripulacionDotacion : '-'}</span></p>
-            <p><strong>inventario Estimado:</strong> <span>${medio.inventarioEstimado != null ? medio.inventarioEstimado : '-'}</span></p>
-            <p><strong>capacidad Prod. Anual:</strong> <span>${medio.capacidadProduccionAnual != null ? medio.capacidadProduccionAnual : '-'}</span></p>
+            <p><strong>Pais de origen:</strong> <span>${medio.paisOrigen != null ? medio.paisOrigen : '-'}</span></p>
+            <p><strong>Fabricante:</strong> <span>${medio.fabricante != null ? medio.fabricante : '-'}</span></p>
+            <p><strong>Costo de adquisicion (MUsd):</strong> <span>${medio.costoAdquisicionMUsd != null ? medio.costoAdquisicionMUsd : '-'}</span></p>
+            <p><strong>Costo operativo Hora (Usd):</strong> <span>${medio.costoOperativoHoraUsd != null ? medio.costoOperativoHoraUsd : '-'}</span></p>
+            <p><strong>Vida util Horas:</strong> <span>${medio.vidaUtilHoras != null ? medio.vidaUtilHoras : '-'}</span></p>
+            <p><strong>Año de introduccion:</strong> <span>${medio.añoIntroduccion != null ? medio.añoIntroduccion : '-'}</span></p>
+            <p><strong>Tripulacion:</strong> <span>${medio.tripulacionDotacion != null ? medio.tripulacionDotacion : '-'}</span></p>
+            <p><strong>Inventario estimado:</strong> <span>${medio.inventarioEstimado != null ? medio.inventarioEstimado : '-'}</span></p>
+            <p><strong>Capacidad Prod. Anual:</strong> <span>${medio.capacidadProduccionAnual != null ? medio.capacidadProduccionAnual : '-'}</span></p>
         </div>
 
         <!-- BLOQUE EXCLUSIVO PARA DESCRIPCIÓN -->
@@ -80,9 +80,9 @@
 
         <!-- Bloque 3: Integraciones Futuras -->
         <div class="bloque-specs">
-            <p><strong>armasIntegradas:</strong> <span>(para agregar despues)</span></p>
-            <p><strong>plataformasCompatibles:</strong> <span>(para agregar despues)</span></p>
-            <p><strong>operadores paises:</strong> <span>(para agregar despues)</span></p>
+            <p><strong>Armamento integrado:</strong> <span>(para agregar despues)</span></p>
+            <p><strong>Plataformas compatibles:</strong> <span>(para agregar despues)</span></p>
+            <p><strong>Paises operadores:</strong> <span>(para agregar despues)</span></p>
         </div>
 
         <!-- BARRA DE ACCIONES INFERIOR -->
