@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Catálogo de Medios</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
 </head>
 <body>
 
@@ -23,7 +24,7 @@
                 <details class="menu-modulo">
                     <summary>Aeronaves</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/aereo/listado">Ver Aeronaves</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/aereo/general">Ver Aeronaves</a>
                         <a href="${pageContext.request.contextPath}/app/medios/aereo">Categorías</a>
                     </div>
                 </details>
@@ -31,7 +32,7 @@
                 <details class="menu-modulo">
                     <summary>Radares</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/radar/listado">Ver Radares</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/radar/general">Ver Radares</a>
                         <a href="${pageContext.request.contextPath}/app/medios/radar">Categorías</a>
                     </div>
                 </details>
@@ -39,7 +40,7 @@
                 <details class="menu-modulo">
                     <summary>Armamento</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/armamento/listado">Ver Armamento</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/armamento/general">Ver Armamento</a>
                         <a href="${pageContext.request.contextPath}/app/medios/armamento">Categorías</a>
                     </div>
                 </details>
@@ -47,15 +48,16 @@
                 <details class="menu-modulo">
                     <summary>EW</summary>
                     <div class="submenu">
-                        <a href="${pageContext.request.contextPath}/app/medios/ew/listado">Ver Sistemas EW</a>
+                        <a href="${pageContext.request.contextPath}/app/medios/ew/general">Ver Sistemas EW</a>
                         <a href="${pageContext.request.contextPath}/app/medios/ew">Categorías</a>
                     </div>
                 </details>
                 
                 <a href="${pageContext.request.contextPath}/app/medios/listado" class="enlace-modulo">Totalidad de medios</a>
                 
-                <!-- AGREGADO: Opción para nuevo elemento al final -->
+                <c:if test="${usuarioSession.usuarioActual.rol != 'LECTOR'}">
                 <a href="${pageContext.request.contextPath}/app/medios/nuevo" class="enlace-modulo" style="margin-top: 15px;">Agregar nuevo elemento</a>
+                </c:if>
             </div>
         </aside>
 

@@ -16,7 +16,7 @@
 </div>
 
 <!-- Contenedor de la Tabla -->
-<div style="padding: 30px;">
+<div style="padding: 15px;">
     <div class="tarjeta" style="padding: 0; overflow: hidden;">
         <table class="tabla-tactica">
             <thead>
@@ -61,6 +61,8 @@
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
+
+
             </tbody>
         </table>
     </div>

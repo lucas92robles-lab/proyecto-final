@@ -1,6 +1,7 @@
 package org.lito.jakarta.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,7 +59,7 @@ public class Medio {
     @Column(name = "imagen_url_3")
     private String imagenUrl3;
 
-    // Relaciones con especificaciones (opcionales, pueden ser null)
+    //Relaciones con especificaciones (opcionales, pueden ser null)
     @OneToOne(mappedBy = "medio", cascade = CascadeType.ALL, optional = true)
     private EspecificacionesAereo especificacionesAereo;
 
@@ -71,11 +72,32 @@ public class Medio {
     @OneToOne(mappedBy = "medio", cascade = CascadeType.ALL, optional = true)
     private EspecificacionesArmamento especificacionesMisil;
 
-    @OneToMany(mappedBy = "plataforma")
-    private List<IntegracionArmamento> armasIntegradas;  // misiles que puede usar
+    // 1. Radares Compatibles
+    @ManyToMany
+    @JoinTable(
+        name = "medio_radar",
+        joinColumns = @JoinColumn(name = "medio_id"),
+        inverseJoinColumns = @JoinColumn(name = "radar_id")
+    )
+    private List<Medio> radaresCompatibles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "misil")
-    private List<IntegracionArmamento> plataformasCompatibles;  // plataformas que lo usan
+    // 2. Sistemas EW Compatibles
+    @ManyToMany
+    @JoinTable(
+        name = "medio_ew",
+        joinColumns = @JoinColumn(name = "medio_id"),
+        inverseJoinColumns = @JoinColumn(name = "ew_id") // Verificá si la columna es ew_id o medio_ew_id en tu DB
+    )
+    private List<Medio> sistemasEwCompatibles = new ArrayList<>();
+
+    // 3. Armamento Compatible
+    @ManyToMany
+    @JoinTable(
+        name = "medio_armamento",
+        joinColumns = @JoinColumn(name = "medio_id"),
+        inverseJoinColumns = @JoinColumn(name = "armamento_id") // Verificá si es armamento_id o medio_armamento_id
+    )
+    private List<Medio> armamentoCompatible = new ArrayList<>();
 
     @OneToMany(mappedBy = "medio")
     private List<OperadoresMedios> operadores;  // países que lo operan
@@ -87,7 +109,7 @@ public class Medio {
             String capacidadProduccionAnual, String descripcion, String imagenUrl, String imagenUrl2, String imagenUrl3,
             EspecificacionesAereo especificacionesAereo, EspecificacionesEw especificacionesEw,
             EspecificacionesRadar especificacionesRadar, EspecificacionesArmamento especificacionesMisil,
-            List<IntegracionArmamento> armasIntegradas, List<IntegracionArmamento> plataformasCompatibles,
+            List<Medio> armamentoCompatible, List<Medio> plataformasCompatibles,
             List<OperadoresMedios> operadores) {
         this.id = id;
         this.nombre = nombre;
@@ -108,8 +130,8 @@ public class Medio {
         this.especificacionesEw = especificacionesEw;
         this.especificacionesRadar = especificacionesRadar;
         this.especificacionesMisil = especificacionesMisil;
-        this.armasIntegradas = armasIntegradas;
-        this.plataformasCompatibles = plataformasCompatibles;
+        this.armamentoCompatible = armamentoCompatible;
+        //this.plataformasCompatibles = plataformasCompatibles;
         this.operadores = operadores;
         this.imagenUrl2 = imagenUrl2;
         this.imagenUrl3 = imagenUrl3;
@@ -276,22 +298,22 @@ public class Medio {
         this.especificacionesMisil = especificacionesMisil;
     }
 
-    public List<IntegracionArmamento> getArmasIntegradas() {
-        return armasIntegradas;
+    public List<Medio> getArmamentoCompatible() {
+        return armamentoCompatible;
     }
 
-    public void setArmasIntegradas(List<IntegracionArmamento> armasIntegradas) {
-        this.armasIntegradas = armasIntegradas;
+    public void setArmamentoCompatible(List<Medio> armamentoCompatible) {
+        this.armamentoCompatible = armamentoCompatible;
     }
-
-    public List<IntegracionArmamento> getPlataformasCompatibles() {
+    /* 
+    public List<Medio> getPlataformasCompatibles() {
         return plataformasCompatibles;
     }
 
-    public void setPlataformasCompatibles(List<IntegracionArmamento> plataformasCompatibles) {
+    public void setPlataformasCompatibles(List<Medio> plataformasCompatibles) {
         this.plataformasCompatibles = plataformasCompatibles;
     }
-
+    */
     public List<OperadoresMedios> getOperadores() {
         return operadores;
     }
@@ -299,6 +321,24 @@ public class Medio {
     public void setOperadores(List<OperadoresMedios> operadores) {
         this.operadores = operadores;
     }
-    
+
+
+    public List<Medio> getRadaresCompatibles() {
+        return radaresCompatibles;
+    }
+
+    public void setRadaresCompatibles(List<Medio> radaresCompatibles) {
+        this.radaresCompatibles = radaresCompatibles;
+    }
+
+    public List<Medio> getSistemasEwCompatibles() {
+        return sistemasEwCompatibles;
+    }
+
+    public void setSistemasEwCompatibles(List<Medio> sistemasEwCompatibles) {
+        this.sistemasEwCompatibles = sistemasEwCompatibles;
+    }
+
+       
 
 }

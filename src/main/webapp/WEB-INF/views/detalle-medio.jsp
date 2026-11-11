@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <%@ include file="header.jsp" %>
 
@@ -74,17 +75,65 @@
 
         <!-- BLOQUE EXCLUSIVO PARA DESCRIPCIÓN -->
         <div class="bloque-descripcion">
-            <strong>descripción_general:</strong>
+            <strong>Descripción general:</strong>
             <p>${medio.descripcion != null ? medio.descripcion : 'Sin descripción detallada.'}</p>
         </div>
 
-        <!-- Bloque 3: Integraciones Futuras -->
+        <!-- BloqueIntegraciones -->
         <div class="bloque-specs">
-            <p><strong>Armamento integrado:</strong> <span>(para agregar despues)</span></p>
-            <p><strong>Plataformas compatibles:</strong> <span>(para agregar despues)</span></p>
-            <p><strong>Paises operadores:</strong> <span>(para agregar despues)</span></p>
-        </div>
+            <!-- Radares Compatibles -->
+            <div>
+                <h4 style="margin-top: 20px; margin-bottom: 20px;">Radares Compatibles </h4>
+                <c:choose>
+                    <c:when test="${not empty medio.radaresCompatibles}">
+                        <ul style="list-style-type: none;">
+                            <c:forEach var="radar" items="${medio.radaresCompatibles}">
+                                <li style="margin-bottom: 4px;">${radar.nombre} (${empty radar.modelo ? 'Sin modelo' : radar.modelo})</li>
+                            </c:forEach>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <p>No hay radares asociados a este medio.</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
+            <!-- Sistemas EW Compatibles -->
+            <div>
+                <h4 style="margin-top: 20px; margin-bottom: 20px;">Sistemas de Guerra Electrónica (EW)</h4>
+                <c:choose>
+                    <c:when test="${not empty medio.sistemasEwCompatibles}">
+                        <ul style="list-style-type: none;">
+                            <c:forEach var="ew" items="${medio.sistemasEwCompatibles}">
+                                <li style="margin-bottom: 4px;">${ew.nombre} (${empty ew.modelo ? 'Sin modelo' : ew.modelo})</li>
+                            </c:forEach>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <p>No hay sistemas EW asociados a este medio.</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <div>
+                <h4 style="margin-top: 20px; margin-bottom: 20px;">Armamento Compatible</h4>
+                <c:choose>
+                    <c:when test="${not empty medio.armamentosCompatibles}">
+                        <ul style="list-style-type: none;">
+                            <c:forEach var="arm" items="${medio.armamentosCompatibles}">
+                                <li style="margin-bottom: 4px;">${arm.nombre} (${empty arm.modelo ? 'Sin modelo' : arm.modelo})</li>
+                            </c:forEach>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <p>No hay armamento asociado a este medio.</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <!-- <h4 style="margin-top: 20px; margin-bottom: 20px;">Paises operadores:</h4><span>(para agregar despues)</span> -->
+        </div>
+           
         <!-- BARRA DE ACCIONES INFERIOR -->
         <div style="margin-top: 40px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #9ca3af; padding-top: 20px;">
             
@@ -95,9 +144,11 @@
             
             <!-- Derecha: Editar y Eliminar -->
             <div style="display: flex; gap: 10px;">
-                <a href="${pageContext.request.contextPath}/app/medios/editar/${medio.id}" class="btn" style="background: var(--color-secundario); color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: var(--fuente-tactica);">
-                    Editar Activo
-                </a>
+                <c:if test="${usuarioSession.usuarioActual.rol != 'LECTOR'}">
+                    <a href="${pageContext.request.contextPath}/app/medios/editar/${medio.id}" class="btn" style="background: var(--color-secundario); color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: var(--fuente-tactica);">
+                        Editar Activo
+                    </a>
+                </c:if>
                 
                 <!-- Solo mostramos el botón de eliminar si el usuario actual es ADMIN -->
                 <c:if test="${usuarioSession.usuarioActual.rol == 'ADMIN'}">

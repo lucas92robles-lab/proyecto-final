@@ -2,25 +2,33 @@ package org.lito.jakarta.controller;
 
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
+import jakarta.mvc.Models; // <-- Importante
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import org.lito.jakarta.session.UsuarioSession;
+import org.lito.jakarta.service.DashboardService;
 
+@Controller
 @Path("/dashboard")
-@Controller 
 public class DashboardController {
 
     @Inject
-    private UsuarioSession usuarioSession; 
+    private DashboardService dashboardService;
+
+    @Inject
+    private Models models; // <-- Inyectamos Models de Jakarta MVC
 
     @GET
-    public String mostrarDashboard() {
-        // Validación de seguridad si no está logueado, al login
-        if (usuarioSession.getUsuarioActual() == null || !usuarioSession.isLogueado()) {
-            return "redirect:auth/login";
-        }
+    @Path("/")
+    public String verDashboard() {
         
-        // Si está logueado, le mostramos la pantalla del dashboard
+        // Cargamos las variables directamente en el contenedor de modelos de MVC
+        models.put("totalMedios", dashboardService.contarMedios());
+        models.put("totalAeronaves", dashboardService.contarAeronaves());
+        models.put("totalRadares", dashboardService.contarRadares());
+        models.put("totalEw", dashboardService.contarEw());
+        models.put("totalArmamento", dashboardService.contarArmamento());
+        models.put("ultimoMedio", dashboardService.obtenerUltimoMedio());
+
         return "dashboard.jsp"; 
     }
 }

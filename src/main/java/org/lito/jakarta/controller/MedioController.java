@@ -48,6 +48,16 @@ public class MedioController {
     }
 
     @GET
+    @Path("/aereo/general")
+    public String listarAereosGeneral() {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        models.put("medios", medioService.obtenerMediosPorBloqueGeneral("AEREO"));
+        models.put("tituloSeccion", "Activos Aéreos - Vista General");
+        return "catalogo-tarjetas.jsp";
+    }
+
+
+    @GET
     @Path("/aereo/{subcategoria}")
     public String moduloAereoFiltrado(@PathParam("subcategoria") String subcategoria) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
@@ -68,6 +78,15 @@ public class MedioController {
         models.put("medios", lista);
         models.put("tituloModulo", "MÓDULO RADAR");
         return "categorias-radares.jsp"; 
+    }
+
+    @GET
+    @Path("/radar/general")
+    public String listarRadaresGeneral() {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        models.put("medios", medioService.obtenerMediosPorBloqueGeneral("RADAR"));
+        models.put("tituloSeccion", "Sistemas de Radar - Vista General");
+        return "catalogo-tarjetas.jsp";
     }
 
     @GET
@@ -94,6 +113,15 @@ public class MedioController {
     }
 
     @GET
+    @Path("/ew/general")
+    public String listarEwGeneral() {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        models.put("medios", medioService.obtenerMediosPorBloqueGeneral("EW"));
+        models.put("tituloSeccion", "Guerra Electrónica - Vista General");
+        return "catalogo-tarjetas.jsp";
+    }
+
+    @GET
     @Path("/ew/{subcategoria}")
     public String moduloEwFiltrado(@PathParam("subcategoria") String subcategoria) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
@@ -117,6 +145,15 @@ public class MedioController {
     }
 
     @GET
+    @Path("/armamento/general")
+    public String listarArmamentoGeneral() {
+        if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+        models.put("medios", medioService.obtenerMediosPorBloqueGeneral("ARMAMENTO"));
+        models.put("tituloSeccion", "Sistemas de Armamento - Vista General");
+        return "catalogo-tarjetas.jsp";
+    }
+
+    @GET
     @Path("/armamento/{subcategoria}")
     public String moduloArmamentoFiltrado(@PathParam("subcategoria") String subcategoria) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
@@ -127,7 +164,7 @@ public class MedioController {
         return "listado.jsp"; 
     }
 
-    // --- LISTADO ---
+    //  LISTADO 
     @GET
     @Path("/listado")
     public String listado(@QueryParam("categoria") String categoria) {
@@ -149,12 +186,14 @@ public class MedioController {
         return "listado.jsp"; 
     }
 
-    // --- VER DETALLES del medio ---
+    //  VER DETALLES del medio 
     @GET
     @Path("/detalle-medio/{id}")
     public String verDetalles(@PathParam("id") Integer id) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
         
+        System.out.println("=== DEBUG: Buscando detalle para ID: " + id + " ===");
+
         MedioDetalleDTO detalle = medioService.obtenerPorId(id);
         
         if (detalle == null) return "redirect:medios/listado"; 
@@ -168,9 +207,20 @@ public class MedioController {
     @Path("/nuevo")
     public String nuevoMedio() {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+
+        String rol = usuarioSession.getUsuarioActual().getRol();
+        if ("LECTOR".equals(rol)){
+            return "redirect:medios/listado";
+        }
+
         models.put("tituloFormulario", "NUEVO ACTIVO TÁCTICO");
         models.put("paises", medioService.obtenerTodosLosPaises());
         models.put("fabricantes", medioService.obtenerTodosLosFabricantes());
+      
+        models.put("listaRadares", medioService.obtenerMediosPorBloque("RADAR"));
+        models.put("listaEw", medioService.obtenerMediosPorBloque("EW"));
+        models.put("listaArmamento", medioService.obtenerMediosPorBloque("ARMAMENTO"));
+
         return "formulario-medio.jsp";
     }
 
@@ -179,6 +229,11 @@ public class MedioController {
     @Path("/editar/{id}")
     public String editarMedio(@PathParam("id") Integer id) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+
+        String rol = usuarioSession.getUsuarioActual().getRol();
+        if ("LECTOR".equals(rol)) {
+            return "redirect:medios/listado"; // El Lector no puede editar
+        }
         
         MedioDetalleDTO detalle = medioService.obtenerPorId(id);
         if (detalle == null) return "redirect:medios/listado"; 
@@ -187,21 +242,22 @@ public class MedioController {
         models.put("tituloFormulario", "EDITAR ACTIVO: " + detalle.getNombre());
         models.put("paises", medioService.obtenerTodosLosPaises());
         models.put("fabricantes", medioService.obtenerTodosLosFabricantes());
+
+        models.put("listaRadares", medioService.obtenerMediosPorBloque("RADAR"));
+        models.put("listaEw", medioService.obtenerMediosPorBloque("EW"));
+        models.put("listaArmamento", medioService.obtenerMediosPorBloque("ARMAMENTO"));
         return "formulario-medio.jsp";
     }
 
     // Recibir los datos del formulario
     @POST
     @Path("/guardar")
-    //@Consumes(MediaType.MULTIPART_FORM_DATA)
     public String guardarMedio(
-        
         @FormParam("id") String strId, 
         @FormParam("nombre") String nombre,
         @FormParam("categoriaId") String strCategoriaId,
         @FormParam("paisId") String strPaisId,
         @FormParam("fabricanteId") String strFabricanteId,
-
         @FormParam("modelo") String modelo,
         @FormParam("imagenUrl") String imagenUrl,
         @FormParam("imagenUrl2") String imagenUrl2,
@@ -210,7 +266,6 @@ public class MedioController {
         @FormParam("costoAdquisicion") String strCostoAdq,
         @FormParam("costoOperativo") String strCostoOp,
         @FormParam("descripcion") String descripcion,
-        
         @FormParam("velocidadMaxMach") String strVelocidad,
         @FormParam("techoServicioPies") String strTecho,
         @FormParam("radioCombateMillas") String strRadio,
@@ -219,13 +274,11 @@ public class MedioController {
         @FormParam("rcsM2") String strRcs,
         @FormParam("envergaduraPies") String strEnv,
         @FormParam("longitudPies") String strLon,
-
         @FormParam("bandaFrecuencia") String bandaFrecuencia,
         @FormParam("alcanceDeteccionKm") String strAlcanceDeteccion,
         @FormParam("potenciaPicoKw") String strPotencia,
         @FormParam("tipoAntena") String tipoAntena,
         @FormParam("resolucionDistanciaM") String strRes,
-
         @FormParam("rangoFrecuenciaMinMhz") String strRangoMin,
         @FormParam("rangoFrecuenciaMaxMhz") String strRangoMax,
         @FormParam("modosOperacion") String modosOperacion,
@@ -233,23 +286,29 @@ public class MedioController {
         @FormParam("tecnicasJamming") String tecnicasJamming,
         @FormParam("numeroObjetivosSimultaneos") String strObjs,
         @FormParam("capacidadDrfm") String strDrfm,
-
         @FormParam("tipoGuia") String tipoGuia,
         @FormParam("tipoObjetivo") String tipoObjetivo,
         @FormParam("tecnologiaBuscador") String tecnologiaBuscador,
         @FormParam("alcanceMaxKm") String strAlcanceArma,
         @FormParam("velocidadMaxMachArm") String strVelArm,
-        @FormParam("pesoOjivaKg") String strOjiva
+        @FormParam("pesoOjivaKg") String strOjiva,
+        @FormParam("radaresIds") List<Integer> radaresIds,
+        @FormParam("ewIds") List<Integer> ewIds,
+        @FormParam("armamentoIds") List<Integer> armamentoIds
     ) {
         if (!usuarioSession.isLogueado()) return "redirect:auth/login";
+
+        String rol = usuarioSession.getUsuarioActual().getRol();
+        if ("LECTOR".equals(rol)) {
+            return "redirect:medios/listado"; 
+        }
         
-        //conversiones
+        // Conversiones numéricas básicas
         Integer id = (strId != null && !strId.isBlank()) ? Integer.valueOf(strId) : null;
         Integer categoriaId = (strCategoriaId != null && !strCategoriaId.isBlank()) ? Integer.valueOf(strCategoriaId) : null;
         Integer paisId = (strPaisId != null && !strPaisId.isBlank()) ? Integer.valueOf(strPaisId) : null;
         Integer fabricanteId = (strFabricanteId != null && !strFabricanteId.isBlank()) ? Integer.valueOf(strFabricanteId) : null;
         
-        // Conversiones Base
         Integer anoIntro = (strAno != null && !strAno.isBlank()) ? Integer.valueOf(strAno) : null;
         Double costoAdq = (strCostoAdq != null && !strCostoAdq.isBlank()) ? Double.valueOf(strCostoAdq) : null;
         Integer costoOp = (strCostoOp != null && !strCostoOp.isBlank()) ? Integer.valueOf(strCostoOp) : null;
@@ -281,7 +340,7 @@ public class MedioController {
         Double velArm = (strVelArm != null && !strVelArm.isBlank()) ? Double.valueOf(strVelArm) : null;
         Double pesoOjivaKg = (strOjiva != null && !strOjiva.isBlank()) ? Double.valueOf(strOjiva) : null;
 
-        // Corrección de codificación de acentos para campos de texto libre
+        // Corrección de codificación de acentos
         if (descripcion != null && !descripcion.isBlank()) {
             descripcion = new String(descripcion.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
         }
@@ -289,18 +348,17 @@ public class MedioController {
             modelo = new String(modelo.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
         }
         
-            
-    
+        // Delegamos todo el guardado y asignación de relaciones al Servicio
         medioService.guardarMedioCompleto(id, nombre, categoriaId, paisId, fabricanteId,
                 modelo, imagenUrl, imagenUrl2, imagenUrl3, anoIntro, costoAdq, costoOp, descripcion,
                 velocidadMaxMach, techoServicioPies, radioCombateMillas, cargaGMaxima, pesoMaxDespegueLb, rcsM2, envPies, lonPies,
                 bandaFrecuencia, alcanceDeteccionKm, potenciaPicoKw, tipoAntena, resolucionDist,
                 rangoFrecuenciaMinMhz, rangoFrecuenciaMaxMhz, modosOperacion, potErp, tecnicasJamming, numObjs, capacidadDrfm,
-                tipoGuia, tipoObjetivo, tecnologiaBuscador, alcanceMaxKm, velArm, pesoOjivaKg);
+                tipoGuia, tipoObjetivo, tecnologiaBuscador, alcanceMaxKm, velArm, pesoOjivaKg, 
+                radaresIds, ewIds, armamentoIds);
         
         return "redirect:medios/listado"; 
     }
-
     // 4. Eliminar
     @GET
     @Path("/eliminar/{id}")

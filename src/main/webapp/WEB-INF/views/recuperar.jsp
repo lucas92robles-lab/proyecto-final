@@ -4,7 +4,9 @@
 <head>
     <title>Recuperar Contraseña</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
 </head>
+
 <body class="pantalla-inicio">
     <div class="caja-login caja-recuperacion">
         <h2>RECUPERACIÓN DE ACCESO</h2>
@@ -20,7 +22,7 @@
         <a href="${pageContext.request.contextPath}/app/auth/login" class="btn-ingresar">Volver al login</a>
     </div>
 
-    <!-- NOTA : Este formulario es solo un ejemplo y no implementa la funcionalidad real de recuperación de contraseña.
+    <!-- NOTA : Este formulario actualmente no implementa la funcionalidad real de recuperación de contraseña.
       Para una implementación completa, se debería agregar la lógica del lado del servidor para manejar la solicitud de recuperación, enviar un correo electrónico con un enlace seguro para restablecer la contraseña y validar el token recibido. 
       falta agregar la logica de recuperaciooon
       

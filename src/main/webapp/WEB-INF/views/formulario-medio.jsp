@@ -27,6 +27,7 @@
         }
     };
 </script>
+
 <!-- SCRIPT FETCH PARA SUBIDA EN SEGUNDO PLANO -->
 <script>
 function subirImagen(indice) {
@@ -39,7 +40,7 @@ function subirImagen(indice) {
     const formData = new FormData();
     formData.append('file', file);
 
-    previewDiv.innerHTML = '<span style="color: #3182ce;">Subiendo a C:\\tactica-subidas\\...</span>';
+    previewDiv.innerHTML = '<span style="color: #3182ce;">Subiendo imagen...</span>';
 
     fetch('${pageContext.request.contextPath}/app/imagenes/upload', {
         method: 'POST',
@@ -64,6 +65,66 @@ function subirImagen(indice) {
     });
 }
 </script>
+
+<!-- SCRIPT PARA SELECTORES DINÁMICOS -->
+<script>
+    function agregarOtroSelect(tipo) {
+        let containerId = "";
+        let selectName = "";
+
+        if (tipo === 'radar') {
+            containerId = "container-radares";
+            selectName = "radaresIds";
+        } else if (tipo === 'ew') {
+            containerId = "container-ew";
+            selectName = "ewIds";
+        } else if (tipo === 'armamento') {
+            containerId = "container-armamento";
+            selectName = "armamentoIds";
+        }
+
+        const contenedor = document.getElementById(containerId);
+        if (!contenedor) return;
+
+        // Buscamos el primer select de referencia dentro de su contenedor
+        const primerSelect = contenedor.querySelector(`select[name='${selectName}']`);
+        if (!primerSelect) return;
+
+        // Creamos un wrapper en línea para alinear el nuevo select y su botón de eliminar
+        const nuevoWrapper = document.createElement('div');
+        nuevoWrapper.style.display = "flex";
+        nuevoWrapper.style.alignItems = "center";
+        nuevoWrapper.style.gap = "8px";
+
+        // Clonamos el select y blanqueamos su valor
+        const nuevoSelect = primerSelect.cloneNode(true);
+        nuevoSelect.value = ""; 
+        nuevoSelect.style.flex = "1";
+
+        // Creamos un botón estético para quitar esta opción extra
+        const btnEliminar = document.createElement('button');
+        btnEliminar.type = "button";
+        btnEliminar.textContent = "✕";
+        btnEliminar.style.padding = "6px 12px";
+        btnEliminar.style.background = "#fee2e2";
+        btnEliminar.style.color = "#991b1b";
+        btnEliminar.style.border = "1px solid #f87171";
+        btnEliminar.style.borderRadius = "6px";
+        btnEliminar.style.cursor = "pointer";
+        btnEliminar.style.fontWeight = "bold";
+
+        btnEliminar.onclick = function() {
+            nuevoWrapper.remove();
+        };
+
+        nuevoWrapper.appendChild(nuevoSelect);
+        nuevoWrapper.appendChild(btnEliminar);
+
+        // Agregamos el nuevo bloque al contenedor vertical correspondiente
+        contenedor.appendChild(nuevoWrapper);
+    }
+</script>
+
 
 <div class="form-container">
     <div class="form-tarjeta">
@@ -116,8 +177,7 @@ function subirImagen(indice) {
                         </c:if>
                     </div>
                 </div>
-
-                    
+                
                 <label>País de Origen:</label> 
                 <select name="paisId">
                     <option value="">-- Seleccione un País --</option>
@@ -128,7 +188,6 @@ function subirImagen(indice) {
                     </c:forEach>
                 </select>
                 
-                <!-- NUEVO: DESPLEGABLE DE FABRICANTE -->
                 <label>Fabricante:</label> 
                 <select name="fabricanteId">
                     <option value="">-- Seleccione un Fabricante --</option>
@@ -172,7 +231,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE AÉREO -->
-            <div id="bloqueAereo" class="bloque-tipo">
+            <div id="bloqueAereo" class="bloque-tipo" style="display:none;">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="1" ${medio.categoria.id == 1 ? 'checked' : ''}><span>Caza</span></label>
@@ -182,8 +241,8 @@ function subirImagen(indice) {
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="5" ${medio.categoria.id == 5 ? 'checked' : ''}><span>UAV</span></label>
                 </div>
 
-                <h4>Especificaciones:</h4>
-                <div class="inputs-grid">
+                <h4>Especificaciones Aéreas:</h4>
+                <div class="inputs-grid" style="margin-bottom: 15px;">
                     <label>Velocidad Máx (Mach):</label> <input type="number" step="0.1" name="velocidadMaxMach" value="${medio.especificacionesAereo.velocidadMaxMach}">
                     <label>Techo Servicio (ft):</label> <input type="number" name="techoServicioPies" value="${medio.especificacionesAereo.techoServicioPies}">
                     <label>Radio Combate (mn):</label> <input type="number" name="radioCombateMillas" value="${medio.especificacionesAereo.radioCombateMillas}">
@@ -196,7 +255,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE RADAR -->
-            <div id="bloqueRadar" class="bloque-tipo">
+            <div id="bloqueRadar" class="bloque-tipo" style="display:none;">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="90" ${medio.categoria.id == 90 ? 'checked' : ''}><span>Alerta Temprana</span></label>
@@ -204,7 +263,7 @@ function subirImagen(indice) {
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="94" ${medio.categoria.id == 94 ? 'checked' : ''}><span>Control de Tiro</span></label>
                 </div>
 
-                <h4>Especificaciones:</h4>
+                <h4>Especificaciones Radar:</h4>
                 <div class="inputs-grid">
                     <label>Banda de Frecuencia:</label> <input type="text" name="bandaFrecuencia" value="${medio.especificacionesRadar.bandaFrecuencia}">
                     <label>Alcance Detección (km):</label> <input type="number" step="0.1" name="alcanceDeteccionKm" value="${medio.especificacionesRadar.alcanceDeteccionKm}">
@@ -215,7 +274,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE EW -->
-            <div id="bloqueEw" class="bloque-tipo">
+            <div id="bloqueEw" class="bloque-tipo" style="display:none;">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="101" ${medio.categoria.id == 101 ? 'checked' : ''}><span>Ataque Electrónico</span></label>
@@ -223,7 +282,7 @@ function subirImagen(indice) {
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="103" ${medio.categoria.id == 103 ? 'checked' : ''}><span>Inteligencia de Señales</span></label>
                 </div>
 
-                <h4>Especificaciones:</h4>
+                <h4>Especificaciones EW:</h4>
                 <div class="inputs-grid">
                     <label>Frecuencia Mín (MHz):</label> <input type="number" step="0.1" name="rangoFrecuenciaMinMhz" value="${medio.especificacionesEw.rangoFrecuenciaMinMhz}">
                     <label>Frecuencia Máx (MHz):</label> <input type="number" step="0.1" name="rangoFrecuenciaMaxMhz" value="${medio.especificacionesEw.rangoFrecuenciaMaxMhz}">
@@ -240,7 +299,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE ARMAMENTO -->
-            <div id="bloqueArmamento" class="bloque-tipo">
+            <div id="bloqueArmamento" class="bloque-tipo" style="display:none;">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="201" ${medio.categoria.id == 201 ? 'checked' : ''}><span>Aire-Aire</span></label>
@@ -249,7 +308,7 @@ function subirImagen(indice) {
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="204" ${medio.categoria.id == 204 ? 'checked' : ''}><span>Cohetes-Cañones</span></label>
                 </div>
 
-                <h4>Especificaciones:</h4>
+                <h4>Especificaciones Armamento:</h4>
                 <div class="inputs-grid">
                     <label>Tipo de Guía:</label> <input type="text" name="tipoGuia" value="${medio.especificacionesArmamento.tipoGuia}">
                     <label>Tipo Objetivo:</label> <input type="text" name="tipoObjetivo" value="${medio.especificacionesArmamento.tipoObjetivo}">
@@ -260,11 +319,58 @@ function subirImagen(indice) {
                 </div>
             </div>
 
+            <!-- SECCIÓN DE COMPATIBILIDADES (General para el activo) -->
+            <h3 class="titulo-seccion">Compatibilidad</h3>
+            <div class="compatibilidad-form">
+                
+                <!-- Radar Compatible -->
+                <div class="compatibilidad-grupo">
+                    <label>Radar Compatible:</label>
+                    <div id="container-radares" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                        <select name="radaresIds" class="form-control">
+                            <option value="">-- Seleccionar radar --</option>
+                            <c:forEach var="radar" items="${listaRadares}">
+                                <option value="${radar.id}">${radar.nombre} - ${radar.modelo}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <button type="button" class="btn-agregar" onclick="agregarOtroSelect('radar')">+ Agregar otro radar</button>
+                </div>
+
+                <!-- Sistema EW Compatible -->
+                <div class="compatibilidad-grupo">
+                    <label>Sistema EW Compatible:</label>
+                    <div id="container-ew" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                        <select name="ewIds" class="form-control">
+                            <option value="">-- Seleccionar EW --</option>
+                            <c:forEach var="ew" items="${listaEw}">
+                                <option value="${ew.id}">${ew.nombre} - ${ew.modelo}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <button type="button" class="btn-agregar" onclick="agregarOtroSelect('ew')">+ Agregar otro sistema EW</button>
+                </div>
+
+                <!-- Armamento Compatible -->
+                <div class="compatibilidad-grupo">
+                    <label>Armamento Compatible:</label>
+                    <div id="container-armamento" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                        <select name="armamentoIds" class="form-control">
+                            <option value="">-- Seleccionar armamento --</option>
+                            <c:forEach var="arm" items="${listaArmamento}">
+                                <option value="${arm.id}">${arm.nombre} - ${arm.modelo}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <button type="button" class="btn-agregar" onclick="agregarOtroSelect('armamento')">+ Agregar otro armamento</button>
+                </div>
+
+            </div>
+
             <div style="margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px; display: flex; justify-content: space-between;">
                 <a href="javascript:history.back()" class="btn" style="background: #9ca3af; color: white; text-decoration: none; padding: 10px 20px; border-radius: 4px;">Cancelar</a>
                 <button type="submit" class="btn btn-primario" style="padding: 10px 30px; font-size: 1.1rem; border: none; border-radius: 4px; font-family: var(--fuente-tactica); font-weight: bold; cursor: pointer;">Guardar Activo Táctico</button>
             </div>
-        </form>
     </div>
 </div>
 

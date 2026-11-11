@@ -2,26 +2,56 @@
 
 <%@ include file="header.jsp" %>
 
-<div class="tarjeta" style="margin-bottom: 2rem;">
-    <h2 style="color: var(--color-primario); margin-bottom: 10px;">Panel de Control Principal (Dashboard)</h2>
-    <p style="color: var(--texto-secundario); margin-bottom: 5px;">Bienvenido al sistema de catalogación de entidades aeroespaciales</p>
-    <p style="color: var(--texto-secundario);">Seleccione un módulo en la barra lateral para gestionar el inventario.</p>
-</div>
+<div class="dashboard-container">
+    
+    <h2 class="titulo-seccion">Panel de Control General</h2>
 
+    <!-- Tarjetas de Métricas Principales (KPIs) -->
+    <div class="dashboard-grid">
+        
+        <!-- Totalidad de Medios -->
+        <div class="card-kpi">
+            <span class="kpi-titulo">Total de Medios</span>
+            <span class="kpi-valor">${totalMedios}</span>
+        </div>
 
-<div class="kpi-grid">
-    <div class="tarjeta-kpi">
-        <h3>Total Aeronaves</h3>
-        <div class="numero">0</div> <!-- Más adelante lo conectamos a la BD -->
+        <!-- Totalidad de Aeronaves -->
+        <div class="card-kpi">
+            <span class="kpi-titulo">Aeronaves</span>
+            <span class="kpi-valor">${totalAeronaves}</span>
+        </div>
+
+        <!-- Totalidad de Radares -->
+        <div class="card-kpi">
+            <span class="kpi-titulo">Sistemas Radar</span>
+            <span class="kpi-valor">${totalRadares}</span>
+        </div>
+
+        <!-- Totalidad de Guerra Electrónica (EW) -->
+        <div class="card-kpi">
+            <span class="kpi-titulo">Sistemas EW</span>
+            <span class="kpi-valor">${totalEw}</span>
+        </div>
+
+        <!-- Totalidad de Armamento -->
+        <div class="card-kpi">
+            <span class="kpi-titulo">Armamento</span>
+            <span class="kpi-valor">${totalArmamento}</span>
+        </div>
+
     </div>
-    <div class="tarjeta-kpi">
-        <h3>Sistemas de Radar</h3>
-        <div class="numero">0</div>
+
+    <!-- Sección de Actividad y Último Registro -->
+    <div class="dashboard-actividad" style="margin-top: 30px;">
+        <div class="bloque-specs">
+            <h3>Último Activo Táctico Registrado</h3>
+            <p><strong>Nombre / Diseño:</strong> <span>${ultimoMedio.nombre} (${ultimoMedio.modelo})</span></p>
+            <p><strong>Categoría:</strong> <span>${ultimoMedio.categoria.nombre}</span></p>
+            <p><strong>Fabricante:</strong> <span>${ultimoMedio.fabricante != null ? ultimoMedio.fabricante.nombre : '-'}</span></p>
+            <p><strong>Acción:</strong> <span><a href="${pageContext.request.contextPath}/app/medios/detalle?id=${ultimoMedio.id}">Ver ficha técnica completa</a></span></p>
+        </div>
     </div>
-    <div class="tarjeta-kpi">
-        <h3>Última Actualización</h3>
-        <div class="numero" style="font-size: 1.2rem; margin-top: 15px;">Sistema en línea</div>
-    </div>
+
 </div>
 
 <%@ include file="footer.jsp" %>

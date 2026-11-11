@@ -1,6 +1,8 @@
 package org.lito.jakarta.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MedioDetalleDTO {
     
@@ -27,6 +29,10 @@ public class MedioDetalleDTO {
     private EspecificacionesEwDTO especificacionesEw;
     private EspecificacionesRadarDTO especificacionesRadar;
     private EspecificacionesArmamentoDTO especificacionesArmamento;
+
+    private List<MedioListDTO> radaresCompatibles = new ArrayList<>();
+    private List<MedioListDTO> sistemasEwCompatibles = new ArrayList<>();
+    private List<MedioListDTO> armamentosCompatibles = new ArrayList<>();
 
     public MedioDetalleDTO() {}
    
@@ -81,7 +87,33 @@ public class MedioDetalleDTO {
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
+    
+
     // —— Getters y Setters de los DTOs internos ——
+
+    public List<MedioListDTO> getRadaresCompatibles() {
+        return radaresCompatibles;
+    }
+
+    public void setRadaresCompatibles(List<MedioListDTO> radaresCompatibles) {
+        this.radaresCompatibles = radaresCompatibles;
+    }
+
+    public List<MedioListDTO> getSistemasEwCompatibles() {
+        return sistemasEwCompatibles;
+    }
+
+    public void setSistemasEwCompatibles(List<MedioListDTO> sistemasEwCompatibles) {
+        this.sistemasEwCompatibles = sistemasEwCompatibles;
+    }
+
+    public List<MedioListDTO> getArmamentosCompatibles() {
+        return armamentosCompatibles;
+    }
+
+    public void setArmamentosCompatibles(List<MedioListDTO> armamentosCompatibles) {
+        this.armamentosCompatibles = armamentosCompatibles;
+    }
 
     public EspecificacionesAereoDTO getEspecificacionesAereo() { return especificacionesAereo; }
     public void setEspecificacionesAereo(EspecificacionesAereoDTO especificacionesAereo) { this.especificacionesAereo = especificacionesAereo; }

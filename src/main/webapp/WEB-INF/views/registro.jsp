@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>SITA // Ingreso</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
 </head>
 
 <script>
