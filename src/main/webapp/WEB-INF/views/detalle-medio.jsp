@@ -164,27 +164,52 @@
 
     <!-- COLUMNA DERECHA: IMAGENES -->
     <div class="columna-imagen" style="display: flex; flex-direction: column; gap: 15px;">
+        <c:if test="${not empty medio.imagenUrl}">
+            <c:set var="src1" value="${fn:startsWith(medio.imagenUrl, 'http') ? medio.imagenUrl : pageContext.request.contextPath.concat(medio.imagenUrl)}"/>
+            <div>
+                <img src="${src1}" alt="Imagen 1 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
+            </div>
+        </c:if>
+
+        <c:if test="${not empty medio.imagenUrl}">
+            <c:set var="src1" value="${fn:startsWith(medio.imagenUrl2, 'http') ? medio.imagenUrl2 : pageContext.request.contextPath.concat(medio.imagenUrl2)}"/>
+            <div>
+                <img src="${src1}" alt="Imagen 2 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
+            </div>
+        </c:if>
+
+        <c:if test="${not empty medio.imagenUrl}">
+            <c:set var="src1" value="${fn:startsWith(medio.imagenUrl3, 'http') ? medio.imagenUrl3 : pageContext.request.contextPath.concat(medio.imagenUrl3)}"/>
+            <div>
+                <img src="${src1}" alt="Imagen 3 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
+            </div>
+        </c:if>
+
         
-        <!-- Imagen 1 (Principal) -->
+        
+        
+        
+        
+        <!-- Imagen 1 (Principal) 
         <c:if test="${not empty medio.imagenUrl}">
             <div>
                 <img src="${pageContext.request.contextPath}${medio.imagenUrl}" alt="Imagen 1 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
             </div>
-        </c:if>
+        </c:if>-->
 
-        <!-- Imagen 2 -->
+        <!-- Imagen 2 
         <c:if test="${not empty medio.imagenUrl2}">
             <div>
                 <img src="${pageContext.request.contextPath}${medio.imagenUrl2}" alt="Imagen 2 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
             </div>
-        </c:if>
+        </c:if>-->
 
-        <!-- Imagen 3 -->
+        <!-- Imagen 3
         <c:if test="${not empty medio.imagenUrl3}">
             <div>
                 <img src="${pageContext.request.contextPath}${medio.imagenUrl3}" alt="Imagen 3 de ${medio.nombre}" style="max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e0;">
             </div>
-        </c:if>
+        </c:if> -->
 
         <!-- Si ninguna tiene valor -->
         <c:if test="${empty medio.imagenUrl and empty medio.imagenUrl2 and empty medio.imagenUrl3}">

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <%@ include file="header.jsp" %>
 
@@ -27,7 +28,8 @@
                 <div class="card-img-container">
                     <c:choose>
                         <c:when test="${not empty m.imagenUrl}">
-                            <img src="${pageContext.request.contextPath}${m.imagenUrl}" alt="${m.nombre}">
+                            <c:set var="srcCard" value="${fn:startsWith(m.imagenUrl, 'http') ? m.imagenUrl : pageContext.request.contextPath.concat(m.imagenUrl)}"/>
+                            <img src="${srcCard}" alt="${m.nombre}">
                         </c:when>
                         <c:otherwise>
                             <span class="card-placeholder">Sin Imagen</span>
