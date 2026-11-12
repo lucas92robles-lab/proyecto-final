@@ -135,11 +135,24 @@
                     <driver>h2</driver>
                     <security user-name="sa" password="sa"/>
                 </datasource>
-                <datasource jndi-name="java:/jdbc/TacticaDS" pool-name="TacticaDS" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:postgresql://localhost:5432/tactica_db</connection-url>
+
+                <datasource jndi-name="java:/jdbc/TacticaDS" pool-name="TacticaDS" enabled="true">
+                    <connection-url>${env.DB_URL:jdbc:postgresql://localhost:5432/tactica_db}</connection-url>
                     <driver>postgresql</driver>
-                    <security user-name="admin" password="adminpassword"/>
+                    <pool>
+                        <min-pool-size>1</min-pool-size>
+                        <max-pool-size>5</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>${env.DB_USER:admin}</user-name>
+                        <password>${env.DB_PASSWORD:adminpassword}</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
+                        <validate-on-match>true</validate-on-match>
+                    </validation>
                 </datasource>
+                
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>

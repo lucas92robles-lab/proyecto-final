@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="3.0"
-             xmlns="https://jakarta.ee/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence 
-                                 https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+    <persistence version="3.0"
+                    xmlns="https://jakarta.ee/xml/ns/persistence"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+                                        https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
-    <persistence-unit name="TacticaPU" transaction-type="JTA">
+            <persistence-unit name="TacticaPU" transaction-type="JTA">
+                <jta-data-source>java:/jdbc/TacticaDS</jta-data-source>
 
-        <jta-data-source>java:/jdbc/TacticaDS</jta-data-source>
-
+                <properties>
+                    <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+                    <property name="hibernate.show_sql" value="false"/>
+                    <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+                </properties>
+            </persistence-unit>
+    </persistence>
+        
+            <!-- Conexión directa para BD local 
         <properties>
-            <!-- Conexión directa para BD local -->
             <property name="jakarta.persistence.jdbc.driver"
                       value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url"
@@ -19,25 +26,7 @@
                       value="admin"/>
             <property name="jakarta.persistence.jdbc.password"
                       value="adminpassword"/>
+<?xml version="1.0" encoding="UTF-8"?> 
+            -->
 
-            <!-- Conexión directa a Neon Tech 
-            <property name="jakarta.persistence.jdbc.driver"
-                      value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:postgresql://ep-wandering-surf-a50ns2i1.us-east-2.aws.neon.tech/neondb?sslmode=require"/>
-            <property name="jakarta.persistence.jdbc.user"
-                      value="neondb_owner"/>
-            <property name="jakarta.persistence.jdbc.password"
-                      value="npg_VJX5e7WDtKcd"/>-->
-                      
-            <property name="hibernate.dialect" 
-            value="org.hibernate.dialect.PostgreSQLDialect"/>
-            
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
-            <property name="jakarta.persistence.schema-generation.database.action"
-                      value="none"/>
-        </properties>
-
-    </persistence-unit>
-</persistence>
+    
