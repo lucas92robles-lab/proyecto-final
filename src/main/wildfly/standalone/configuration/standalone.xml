@@ -537,9 +537,4 @@
             <remote-destination host="${jboss.mail.server.host:localhost}" port="${jboss.mail.server.port:25}"/>
         </outbound-socket-binding>
     </socket-binding-group>
-    <deployments>
-        <deployment name="tactica01.war" runtime-name="tactica01.war">
-            <fs-exploded path="C:\Users\DELL\Desktop\Practicas\tactica01\target\tactica01.war"/>
-        </deployment>
-    </deployments>
 </server>
