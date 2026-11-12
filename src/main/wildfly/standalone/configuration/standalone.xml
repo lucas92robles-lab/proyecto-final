@@ -143,10 +143,7 @@
                         <min-pool-size>1</min-pool-size>
                         <max-pool-size>5</max-pool-size>
                     </pool>
-                    <security>
-                        <user-name>${env.DB_USER:admin}</user-name>
-                        <password>${env.DB_PASSWORD:adminpassword}</password>
-                    </security>
+                    <security user-name="${env.DB_USER:admin}" password="${env.DB_PASSWORD:adminpassword}"/>
                     <validation>
                         <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
                         <validate-on-match>true</validate-on-match>
