@@ -47,7 +47,7 @@ Ejecución:
 Abrir una terminal en la raíz del proyecto.
 Ejecutar el siguiente comando (en windows):
 
-     ./mvnw clean package wildfly:dev
+     .\mvnw wildfly:dev
 
 Tiempo esperado: La compilación y descarga del servidor embebido toma entre 1 y 3 minutos la primera vez. Las ejecuciones posteriores toman apenas unos segundos.
 

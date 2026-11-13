@@ -494,12 +494,12 @@ details.menu-modulo[open] summary::after {
     }
        
     .bloque-specs p {
-        margin: 10px;
+        
         color: #1f2937;
         display: flex; 
         align-items: baseline;
         justify-content: space-between;
-        border-bottom: 1px dashed var(--color-primario);
+        
     }
     
     .bloque-specs strong {
@@ -509,10 +509,17 @@ details.menu-modulo[open] summary::after {
     }
 
     .bloque-specs span {
-    flex: 1;
-    margin-right: 20px; 
-    font-weight: 500;
-    text-align: right;
+        flex: 1;
+        margin-right: 20px; 
+        font-weight: 500;
+        text-align: right;
+    }
+
+    .bloque-specs-dashboard p{
+        border-bottom: 1px dashed var(--color-primario);
+        display: flex; 
+        align-items: baseline;
+        justify-content: space-between;
     }
 
     /* Estilo exclusivo para el texto largo de la descripción */
@@ -616,7 +623,7 @@ details.menu-modulo[open] summary::after {
 }
 
 .titulo-seccion {
-    margin-top: 40px;
+    margin-top: 15px;
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid #e2e8f0; 

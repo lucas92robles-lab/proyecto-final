@@ -4,7 +4,7 @@
 
 <div class="dashboard-container">
     
-    <h2 class="titulo-seccion">Panel de Control General</h2>
+    <h2 class="catalog-title">Panel de Control General</h2>
 
     <!-- Tarjetas de Métricas Principales (KPIs) -->
     <div class="dashboard-grid">
@@ -43,7 +43,7 @@
 
     <!-- Sección de Actividad y Último Registro -->
     <div class="dashboard-actividad" style="margin-top: 30px;">
-        <div class="bloque-specs">
+        <div class="bloque-specs-dashboard">
             <h3>Último Activo Táctico Registrado</h3>
             <p><strong>Nombre / Diseño:</strong> <span>${ultimoMedio.nombre} (${ultimoMedio.modelo})</span></p>
             <p><strong>Categoría:</strong> <span>${ultimoMedio.categoria.nombre}</span></p>
