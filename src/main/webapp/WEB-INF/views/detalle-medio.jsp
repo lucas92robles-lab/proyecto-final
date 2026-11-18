@@ -178,7 +178,7 @@
         <!-- Imagen 2 -->
         <c:if test="${not empty medio.imagenUrl2}">
             <div>
-                <img class="img-detalle" src="${pageContext.request.contextPath}${medio.imagenUrl2}" alt="Imagen 2 de ${medio.nombre}">
+                <img class="img-detalle" src="${fn:startsWith(medio.imagenUrl2, 'http') ? '' : pageContext.request.contextPath}${medio.imagenUrl2}" alt="Imagen 2 de ${medio.nombre}">
             </div>
         </c:if>
 
