@@ -4,18 +4,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Catálogo de Medios</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
     <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
+    <script src="${pageContext.request.contextPath}/js/scripts.js" defer></script>
 </head>
-<body>
+
+<body data-context-path="${pageContext.request.contextPath}">
 
     <div class="app-contenedor">
         
         <!-- SIDEBAR (Menú Lateral) -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="menu-lateral">
             <div class="sidebar-header">
-               SisCaM
+               SiCaM
             </div>
             
             <div class="sidebar-menu">
@@ -56,19 +59,28 @@
                 <a href="${pageContext.request.contextPath}/app/medios/listado" class="enlace-modulo">Totalidad de medios</a>
                 
                 <c:if test="${usuarioSession.usuarioActual.rol != 'LECTOR'}">
-                <a href="${pageContext.request.contextPath}/app/medios/nuevo" class="enlace-modulo" style="margin-top: 15px;">Agregar nuevo elemento</a>
+                <a href="${pageContext.request.contextPath}/app/medios/nuevo" class="enlace-modulo enlace-nuevo">Agregar nuevo elemento</a>
                 </c:if>
             </div>
         </aside>
+
+        <!-- Fondo oscuro que cierra el menú en pantallas chicas -->
+        <div class="sidebar-overlay"></div>
 
         <!-- COLUMNA PRINCIPAL -->
         <div class="columna-principal">
             
         <header class="topbar">
+            
+            <button type="button" class="btn-menu-toggle" data-toggle-sidebar
+            aria-controls="menu-lateral" aria-expanded="false"
+            aria-label="Mostrar menú" title="Mostrar menú">&gt;
+            </button>
+
             <div class="buscador-global">
-                <form action="${pageContext.request.contextPath}/app/medios/buscar" method="GET" style="display: flex; width: 100%;">
-                <input type="text" name="q" placeholder="Buscar matrícula, nombre o modelo..." required style="width: 100%;">
-            </form>
+                <form action="${pageContext.request.contextPath}/app/medios/buscar" method="GET" class="buscador-form">
+                    <input type="text" name="q" placeholder="Buscar matrícula, nombre o modelo..." required>
+                </form>
             </div>
             <div class="topbar-usuario">
                 <!-- Muestra el usuario -->
@@ -76,9 +88,9 @@
 
                 <!-- Botón visible solo para administradores -->
                 <c:if test="${not empty usuarioSession.usuarioActual && usuarioSession.usuarioActual.rol == 'ADMIN'}">
-                    <a href="${pageContext.request.contextPath}/app/admin/panel" 
-                    style="background: #1e3a8a; color: #fff; padding: 8px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #3b82f6;">
-                         Panel de Administración
+                    <a href="${pageContext.request.contextPath}/app/admin/panel" class="btn-admin">
+                        <span class="txt-largo">Panel de Administración</span>
+                        <span class="txt-corto">Admin</span>
                     </a>
                 </c:if>
 

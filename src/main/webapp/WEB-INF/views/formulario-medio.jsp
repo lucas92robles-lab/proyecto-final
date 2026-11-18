@@ -3,132 +3,9 @@
 
 <%@ include file="header.jsp" %>
 
-<script>
-    function cambiarTipoMedio(esCargaInicial) {
-        document.getElementById('bloqueAereo').style.display = 'none';
-        document.getElementById('bloqueRadar').style.display = 'none';
-        document.getElementById('bloqueEw').style.display = 'none';
-        document.getElementById('bloqueArmamento').style.display = 'none';
-        
-        if (!esCargaInicial) {
-            var radios = document.querySelectorAll('input[name="categoriaId"]');
-            radios.forEach(function(radio) { radio.checked = false; });
-        }
-
-        var seleccion = document.getElementById('tipoSelect').value;
-        if(seleccion !== "") {
-            document.getElementById('bloque' + seleccion).style.display = 'block';
-        }
-    }
-
-    window.onload = function() {
-        if (document.getElementById('tipoSelect') && document.getElementById('tipoSelect').value !== "") {
-            cambiarTipoMedio(true);
-        }
-    };
-</script>
-
-<!-- SCRIPT FETCH PARA SUBIDA EN SEGUNDO PLANO -->
-<script>
-function subirImagen(indice) {
-    const fileInput = document.getElementById('file' + indice);
-    const previewDiv = document.getElementById('preview' + indice);
-    
-    if (!fileInput.files || fileInput.files.length === 0) return;
-
-    const file = fileInput.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-
-    previewDiv.innerHTML = '<span style="color: #3182ce;">Subiendo imagen...</span>';
-
-    fetch('${pageContext.request.contextPath}/app/imagenes/upload', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Error al subir la imagen');
-        return response.json();
-    })
-    .then(data => {
-        if (data.url) {
-            const targetId = indice === 1 ? 'imagenUrl' : ('imagenUrl' + indice);
-            document.getElementById(targetId).value = data.url;
-            previewDiv.innerHTML = '<span style="color: #38a169;">✔ ' + data.url + '</span>';
-        } else {
-            throw new Error(data.error || 'Respuesta inválida');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        previewDiv.innerHTML = '<span style="color: #e53e3e;">✖ Error al subir archivo</span>';
-    });
-}
-</script>
-
-<!-- SCRIPT PARA SELECTORES DINÁMICOS -->
-<script>
-    function agregarOtroSelect(tipo) {
-        let containerId = "";
-        let selectName = "";
-
-        if (tipo === 'radar') {
-            containerId = "container-radares";
-            selectName = "radaresIds";
-        } else if (tipo === 'ew') {
-            containerId = "container-ew";
-            selectName = "ewIds";
-        } else if (tipo === 'armamento') {
-            containerId = "container-armamento";
-            selectName = "armamentoIds";
-        }
-
-        const contenedor = document.getElementById(containerId);
-        if (!contenedor) return;
-
-        // Buscamos el primer select de referencia dentro de su contenedor
-        const primerSelect = contenedor.querySelector(`select[name='${selectName}']`);
-        if (!primerSelect) return;
-
-        // Creamos un wrapper en línea para alinear el nuevo select y su botón de eliminar
-        const nuevoWrapper = document.createElement('div');
-        nuevoWrapper.style.display = "flex";
-        nuevoWrapper.style.alignItems = "center";
-        nuevoWrapper.style.gap = "8px";
-
-        // Clonamos el select y blanqueamos su valor
-        const nuevoSelect = primerSelect.cloneNode(true);
-        nuevoSelect.value = ""; 
-        nuevoSelect.style.flex = "1";
-
-        // Creamos un botón estético para quitar esta opción extra
-        const btnEliminar = document.createElement('button');
-        btnEliminar.type = "button";
-        btnEliminar.textContent = "✕";
-        btnEliminar.style.padding = "6px 12px";
-        btnEliminar.style.background = "#fee2e2";
-        btnEliminar.style.color = "#991b1b";
-        btnEliminar.style.border = "1px solid #f87171";
-        btnEliminar.style.borderRadius = "6px";
-        btnEliminar.style.cursor = "pointer";
-        btnEliminar.style.fontWeight = "bold";
-
-        btnEliminar.onclick = function() {
-            nuevoWrapper.remove();
-        };
-
-        nuevoWrapper.appendChild(nuevoSelect);
-        nuevoWrapper.appendChild(btnEliminar);
-
-        // Agregamos el nuevo bloque al contenedor vertical correspondiente
-        contenedor.appendChild(nuevoWrapper);
-    }
-</script>
-
-
 <div class="form-container">
     <div class="form-tarjeta">
-        <h2 style="color: var(--color-primario); margin-top: 0; margin-bottom: 30px; text-transform: uppercase;">
+        <h2 class="form-titulo">
             ${empty medio.id ? 'Alta de Nuevo' : 'Editar'} Activo Táctico
         </h2>
 
@@ -146,8 +23,8 @@ function subirImagen(indice) {
                 <input type="text" name="modelo" value="${medio.modelo}" placeholder="Ej: Block 50">
                 
                 <label for="imagen1">Imagen 1:</label>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <input type="file" id="file1" accept="image/*" onchange="subirImagen(1)">
+                <div class="fila-columna">
+                    <input type="file" id="file1" accept="image/*" data-subir-imagen="1">
                     <input type="hidden" id="imagenUrl" name="imagenUrl" value="${medio.imagenUrl}">
                     <div id="preview1">
                         <c:if test="${not empty medio.imagenUrl}">
@@ -157,8 +34,8 @@ function subirImagen(indice) {
                 </div>
 
                 <label for="imagen2">Imagen 2 (opcional):</label>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <input type="file" id="file2" accept="image/*" onchange="subirImagen(2)">
+                <div class="fila-columna">
+                    <input type="file" id="file2" accept="image/*" data-subir-imagen="2">
                     <input type="hidden" id="imagenUrl2" name="imagenUrl2" value="${medio.imagenUrl2}">
                     <div id="preview2">
                         <c:if test="${not empty medio.imagenUrl2}">
@@ -168,8 +45,8 @@ function subirImagen(indice) {
                 </div>
                 
                 <label for="imagen3">Imagen 3 (opcional):</label>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <input type="file" id="file3" accept="image/*" onchange="subirImagen(3)">
+                <div class="fila-columna">
+                    <input type="file" id="file3" accept="image/*" data-subir-imagen="3">
                     <input type="hidden" id="imagenUrl3" name="imagenUrl3" value="${medio.imagenUrl3}">
                     <div id="preview3">
                         <c:if test="${not empty medio.imagenUrl3}">
@@ -221,7 +98,7 @@ function subirImagen(indice) {
             <h3 class="titulo-seccion">Clasificación y Especificaciones</h3>
             <div class="form-group inputs-grid">
                 <label>Tipo Principal (*):</label>
-                <select id="tipoSelect" onchange="cambiarTipoMedio(false)" required>
+                <select id="tipoSelect" required>
                     <option value="">-- Elija el tipo principal --</option>
                     <option value="Aereo" ${tipoSeleccionado == 'Aereo' ? 'selected' : ''}>Aéreo</option>
                     <option value="Radar" ${tipoSeleccionado == 'Radar' ? 'selected' : ''}>Radar</option>
@@ -231,7 +108,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE AÉREO -->
-            <div id="bloqueAereo" class="bloque-tipo" style="display:none;">
+            <div id="bloqueAereo" class="bloque-tipo">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="1" ${medio.categoria.id == 1 ? 'checked' : ''}><span>Caza</span></label>
@@ -242,7 +119,7 @@ function subirImagen(indice) {
                 </div>
 
                 <h4>Especificaciones Aéreas:</h4>
-                <div class="inputs-grid" style="margin-bottom: 15px;">
+                <div class="inputs-grid mb-15">
                     <label>Velocidad Máx (Mach):</label> <input type="number" step="0.1" name="velocidadMaxMach" value="${medio.especificacionesAereo.velocidadMaxMach}">
                     <label>Techo Servicio (ft):</label> <input type="number" name="techoServicioPies" value="${medio.especificacionesAereo.techoServicioPies}">
                     <label>Radio Combate (mn):</label> <input type="number" name="radioCombateMillas" value="${medio.especificacionesAereo.radioCombateMillas}">
@@ -255,7 +132,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE RADAR -->
-            <div id="bloqueRadar" class="bloque-tipo" style="display:none;">
+            <div id="bloqueRadar" class="bloque-tipo">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="90" ${medio.categoria.id == 90 ? 'checked' : ''}><span>Alerta Temprana</span></label>
@@ -274,7 +151,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE EW -->
-            <div id="bloqueEw" class="bloque-tipo" style="display:none;">
+            <div id="bloqueEw" class="bloque-tipo">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="101" ${medio.categoria.id == 101 ? 'checked' : ''}><span>Ataque Electrónico</span></label>
@@ -299,7 +176,7 @@ function subirImagen(indice) {
             </div>
 
             <!-- BLOQUE ARMAMENTO -->
-            <div id="bloqueArmamento" class="bloque-tipo" style="display:none;">
+            <div id="bloqueArmamento" class="bloque-tipo">
                 <h4>Categoría:</h4>
                 <div class="categorias-container">
                     <label class="btn-categoria"><input type="radio" name="categoriaId" value="201" ${medio.categoria.id == 201 ? 'checked' : ''}><span>Aire-Aire</span></label>
@@ -326,7 +203,7 @@ function subirImagen(indice) {
                 <!-- Radar Compatible -->
                 <div class="compatibilidad-grupo">
                     <label>Radar Compatible:</label>
-                    <div id="container-radares" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <div id="container-radares" class="compat-lista">
                         <select name="radaresIds" class="form-control">
                             <option value="">-- Seleccionar radar --</option>
                             <c:forEach var="radar" items="${listaRadares}">
@@ -334,13 +211,13 @@ function subirImagen(indice) {
                             </c:forEach>
                         </select>
                     </div>
-                    <button type="button" class="btn-agregar" onclick="agregarOtroSelect('radar')">+ Agregar otro radar</button>
+                    <button type="button" class="btn-agregar" data-agregar-select="radar">+ Agregar otro radar</button>
                 </div>
 
                 <!-- Sistema EW Compatible -->
                 <div class="compatibilidad-grupo">
                     <label>Sistema EW Compatible:</label>
-                    <div id="container-ew" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <div id="container-ew" class="compat-lista">
                         <select name="ewIds" class="form-control">
                             <option value="">-- Seleccionar EW --</option>
                             <c:forEach var="ew" items="${listaEw}">
@@ -348,13 +225,13 @@ function subirImagen(indice) {
                             </c:forEach>
                         </select>
                     </div>
-                    <button type="button" class="btn-agregar" onclick="agregarOtroSelect('ew')">+ Agregar otro sistema EW</button>
+                    <button type="button" class="btn-agregar" data-agregar-select="ew">+ Agregar otro sistema EW</button>
                 </div>
 
                 <!-- Armamento Compatible -->
                 <div class="compatibilidad-grupo">
                     <label>Armamento Compatible:</label>
-                    <div id="container-armamento" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <div id="container-armamento" class="compat-lista">
                         <select name="armamentoIds" class="form-control">
                             <option value="">-- Seleccionar armamento --</option>
                             <c:forEach var="arm" items="${listaArmamento}">
@@ -362,15 +239,16 @@ function subirImagen(indice) {
                             </c:forEach>
                         </select>
                     </div>
-                    <button type="button" class="btn-agregar" onclick="agregarOtroSelect('armamento')">+ Agregar otro armamento</button>
+                    <button type="button" class="btn-agregar" data-agregar-select="armamento">+ Agregar otro armamento</button>
                 </div>
 
             </div>
 
-            <div style="margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px; display: flex; justify-content: space-between;">
-                <a href="javascript:history.back()" class="btn" style="background: #9ca3af; color: white; text-decoration: none; padding: 10px 20px; border-radius: 4px;">Cancelar</a>
-                <button type="submit" class="btn btn-primario" style="padding: 10px 30px; font-size: 1.1rem; border: none; border-radius: 4px; font-family: var(--fuente-tactica); font-weight: bold; cursor: pointer;">Guardar Activo Táctico</button>
+            <div class="acciones-form">
+                <a href="${pageContext.request.contextPath}/app/medios/listado" class="btn btn-neutro" data-volver>Cancelar</a>
+                <button type="submit" class="btn btn-primario btn-guardar">Guardar Activo Táctico</button>
             </div>
+        </form>
     </div>
 </div>
 

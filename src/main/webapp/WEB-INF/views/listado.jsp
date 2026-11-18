@@ -10,13 +10,10 @@
         </h2>
     </div>
     
-    <a href="${pageContext.request.contextPath}/app/medios/nuevo" class="btn btn-primario" style="text-decoration: none;">
-        + Registrar Medio
-    </a>
 </div>
 
 <!-- Contenedor de la Tabla -->
-<div style="padding: 15px;">
+<div>
     <div class="tarjeta" style="padding: 0; overflow: hidden;">
         <table class="tabla-tactica">
             <thead>

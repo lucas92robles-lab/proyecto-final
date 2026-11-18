@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
 
 :root {
@@ -7,6 +6,10 @@
     --fuente-tactica: 'IBM Plex Mono', monospace;
     --texto-claro: #e2e8f0;
     --fondo-var1: #33a2aa;
+    --texto-secundario: #64748b;
+    --sombra-suave: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --color-peligro: #dc2626;
+    --color-neutro: #9ca3af;
 }
 
 * {
@@ -193,20 +196,12 @@ body, html {
 .app-contenedor {
     display: flex;
     height: 100vh;
+    height: 100dvh; /* en móviles descuenta la barra del navegador */
     overflow: hidden;
     background-color: #f4f7f6; /* Fondo claro para el área de datos */
 }
 
-/* --- BARRA LATERAL (SIDEBAR) --- */
-.sidebar {
-    width: 260px;
-    background-color: var(--color-primario);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-    z-index: 10;
-}
+/* --- BARRA LATERAL: ver bloque "MENÚ LATERAL" más abajo --- */
 
 .sidebar-header {
     height: 60px;
@@ -226,6 +221,94 @@ body, html {
     flex-grow: 1;
     overflow-y: auto;
 }
+
+
+/* ==========================================
+   MENÚ LATERAL
+   Oculto por defecto. El botón < / > (data-toggle-sidebar) agrega/quita
+   la clase .abierta en .sidebar (ver scripts.js).
+   ========================================== */
+.btn-menu-toggle {
+    flex-shrink: 0;
+    margin-right: 12px;
+    padding: 10px 14px;
+    background: var(--color-primario);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    font-family: var(--fuente-tactica);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-menu-toggle:hover { background: #1a3b55; }
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    height: 100dvh;
+    background-color: var(--color-primario);
+    color: white;
+    z-index: 100;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transform: translateX(-100%);   /* oculto */
+    visibility: hidden;             /* y fuera del foco del teclado */
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.sidebar.abierta {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.3s ease;
+}
+
+.columna-principal {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+/* Escritorio: al abrir el menú, el contenido se corre a la derecha */
+@media (min-width: 901px) {
+    .sidebar {
+        transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.3s ease;
+    }
+    .sidebar.oculta {
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+    }
+    .columna-principal { margin-left: 260px; }
+    .sidebar.oculta ~ .columna-principal { margin-left: 0; }
+}
+
+/* Fondo oscuro: solo se muestra en pantallas chicas (ver @media 900px) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 99;
+}
+
+
+
 
 /* Estilo del Acordeón Nativo (Desplegable) */
 details.menu-modulo {
@@ -352,7 +435,7 @@ details.menu-modulo[open] summary::after {
 }
 
 .tarjeta-kpi {
-    background: white;
+    background: #c2c2c2;
     padding: 20px;
     border-radius: 6px;
     border-top: 4px solid var(--color-secundario);
@@ -494,12 +577,12 @@ details.menu-modulo[open] summary::after {
     }
        
     .bloque-specs p {
-        
+        margin: 10px;
         color: #1f2937;
         display: flex; 
         align-items: baseline;
         justify-content: space-between;
-        
+        border-bottom: 1px dashed var(--color-primario);
     }
     
     .bloque-specs strong {
@@ -509,17 +592,10 @@ details.menu-modulo[open] summary::after {
     }
 
     .bloque-specs span {
-        flex: 1;
-        margin-right: 20px; 
-        font-weight: 500;
-        text-align: right;
-    }
-
-    .bloque-specs-dashboard p{
-        border-bottom: 1px dashed var(--color-primario);
-        display: flex; 
-        align-items: baseline;
-        justify-content: space-between;
+    flex: 1;
+    margin-right: 20px; 
+    font-weight: 500;
+    text-align: right;
     }
 
     /* Estilo exclusivo para el texto largo de la descripción */
@@ -550,10 +626,12 @@ details.menu-modulo[open] summary::after {
         width: 100%;
         position: sticky; /* sticky Hace que la imagen te acompañe al hacer scroll */
         top: 0; 
-        overflow-y: scroll; /* Permite que la imagen se desplace si es más alta que la pantalla */
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-height: calc(100vh - 60px);
+        overflow-y: auto; /* Permite que la imagen se desplace si es más alta que la pantalla */
         padding-right: 5px;
-
-        /*height: calc(100vh - 60px);  Ocupa el alto visible exacto de la pantalla */
     }
 
     .columna-imagen img {
@@ -623,14 +701,14 @@ details.menu-modulo[open] summary::after {
 }
 
 .titulo-seccion {
-    margin-top: 15px;
+    margin-top: 40px;
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid #e2e8f0; 
 }
 /* Selector de Categorías (Botones Radio) */
 .bloque-tipo { 
-    display: none; 
+    display: none; /* scripts.js agrega .activo al bloque elegido */ 
     margin-top: 20px; 
     padding: 25px; 
     border: 1px solid #cbd5e1; 
@@ -962,7 +1040,7 @@ details.menu-modulo[open] summary::after {
 
 /* Estilo individual de cada tarjeta KPI */
 .card-kpi {
-    background-color: #ffffff;
+    background-color: #c2c2c2;
     border: 1px solid #e2e8f0;
     border-top: 4px solid var(--color-primario, #3b82f6); /* Línea de acento superior */
     border-radius: 8px;
@@ -991,4 +1069,585 @@ details.menu-modulo[open] summary::after {
     font-size: 2rem;
     font-weight: 700;
     color: #0f172a;
+}
+
+/* ==========================================================================
+   COMPONENTES COMPARTIDOS
+   (antes estaban como style="..." dentro de los JSP)
+   ========================================================================== */
+
+.bloque-tipo.activo { display: block; }
+
+/* --- Botones --- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--fuente-tactica);
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+    transition: filter 0.2s;
+}
+
+.btn:hover { filter: brightness(1.1); }
+
+.btn-primario   { background: var(--color-secundario); }
+.btn-secundario { background: var(--color-secundario); }
+.btn-neutro     { background: var(--color-neutro); }
+.btn-peligro    { background: var(--color-peligro); }
+.btn-oscuro     { background: var(--color-primario); }
+
+.btn-chico {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    background: #e2e8f0;
+    color: var(--color-secundario);
+}
+
+.btn-guardar {
+    padding: 10px 30px;
+    font-size: 1.1rem;
+}
+
+/* --- Mensajes de error / éxito --- */
+.alerta {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.alerta-error { background: rgba(220, 38, 38, 0.85); }
+.alerta-exito { background: rgba(56, 161, 105, 0.85); }
+
+/* --- Enlace secundario en las pantallas de acceso --- */
+.enlace-volver {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    color: #cbd5e0;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.enlace-volver:hover { color: white; }
+
+/* ==========================================================================
+   HEADER: menú lateral, buscador y barra superior
+   ========================================================================== */
+.btn-menu {
+    display: none; /* solo se muestra en pantallas chicas */
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: white;
+    color: var(--color-primario);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.sidebar-overlay { display: none; }
+
+.enlace-nuevo { margin-top: 15px; }
+
+.buscador-global { flex: 1; min-width: 0; }
+
+.buscador-form {
+    display: flex;
+    width: 100%;
+}
+
+.buscador-global input {
+    max-width: 100%;
+}
+
+.btn-admin {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid #3b82f6;
+    border-radius: 4px;
+    background: #1e3a8a;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.txt-corto { display: none; }
+
+/* ==========================================================================
+   DETALLE DE UN MEDIO (detalle-medio.jsp)
+   ========================================================================== */
+.titulo-bloque {
+    margin: 20px 0;
+}
+
+.lista-compatibles {
+    list-style-type: none;
+}
+
+.lista-compatibles li {
+    margin-bottom: 4px;
+}
+
+.acciones-detalle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-neutro);
+}
+
+.acciones-derecha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.img-detalle {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+}
+
+.columna-imagen .sin-imagen {
+    padding: 20px;
+    border-radius: 6px;
+    background: #edf2f7;
+    color: #718096;
+    text-align: center;
+}
+
+/* ==========================================================================
+   LISTADOS Y TABLAS (listado.jsp, admin-panel.jsp)
+   ========================================================================== */
+.tarjeta-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tarjeta-header h2 {
+    margin-bottom: 5px;
+    font-size: 1.5rem;
+    color: var(--color-primario);
+}
+
+.contenedor-tabla { padding: 15px; }
+
+.tarjeta-tabla {
+    padding: 0;
+    overflow: auto;
+}
+
+.tabla-tactica th,
+.tabla-tactica td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.tabla-tactica thead tr {
+    background-color: #e2e8f0;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+.tabla-tactica tbody tr {
+    border-bottom: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.tabla-tactica .col-acciones { text-align: right; }
+
+.tabla-tactica .col-nombre {
+    font-family: var(--fuente-tactica);
+    font-weight: bold;
+}
+
+.celda-vacia {
+    padding: 30px;
+    text-align: center;
+    color: var(--texto-secundario);
+}
+
+.etiqueta {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: var(--color-secundario);
+    color: white;
+    font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   PANEL DE ADMINISTRACIÓN (admin-panel.jsp)
+   ========================================================================== */
+.pantalla-ppal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 30px 20px;
+}
+
+.admin-contenido {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.admin-titulo {
+    margin: 0 0 20px;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    color: var(--color-primario);
+}
+
+.admin-subtitulo {
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(15, 37, 55, 0.15);
+    color: #191a1b;
+}
+
+.form-inline { display: inline; }
+
+.select-rol {
+    padding: 4px;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    background: #0f172a;
+    color: #fff;
+    cursor: pointer;
+}
+
+.enlace-eliminar {
+    color: #ef4444;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.col-centro { text-align: center; }
+
+/* ==========================================================================
+   FORMULARIO DE MEDIOS (formulario-medio.jsp)
+   ========================================================================== */
+.form-titulo {
+    margin: 0 0 30px;
+    text-transform: uppercase;
+    color: var(--color-primario);
+}
+
+.fila-columna {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.estado-subiendo { color: #3182ce; }
+.estado-ok       { color: #38a169; overflow-wrap: anywhere; }
+.estado-error    { color: #e53e3e; }
+
+.inputs-grid.mb-15 { margin-bottom: 15px; }
+
+.compat-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.fila-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fila-select select { flex: 1; }
+
+.btn-quitar {
+    padding: 6px 12px;
+    border: 1px solid #f87171;
+    border-radius: 6px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.acciones-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* ==========================================================================
+   DASHBOARD
+   ========================================================================== */
+.dashboard-actividad { margin-top: 30px; }
+
+/* ==========================================================================
+   DISEÑO RESPONSIVO
+   Puntos de corte: 900px (tablet / menú lateral), 700px (tablas en tarjetas),
+   600px (celular) y 400px (celulares angostos).
+   ========================================================================== */
+
+/* ---------- Tablet y menores (≤ 900px) ---------- */
+@media (max-width: 900px) {
+
+    /* Menú lateral: en pantallas chicas se superpone con fondo oscuro */
+    .sidebar { width: min(80vw, 280px); }
+
+    .sidebar-overlay.visible {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .topbar { padding: 0 15px; gap: 12px; }
+    .buscador-global input { width: 100%; }
+
+    /* Detalle: una columna. Orden: datos -> imágenes (una debajo de otra) -> botones */
+    .grid-detalle {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .columna-texto { display: contents; } /* sus bloques pasan a ser items directos de la grilla */
+    .grid-detalle > * { min-width: 0; }
+
+    .columna-imagen {
+        order: 1;                 /* después de los datos */
+        position: static;
+        max-height: none;
+        overflow: visible;
+        padding: 0;
+    }
+
+    .columna-imagen > div { width: 100%; }
+
+    .columna-imagen .img-detalle {   /* 2 clases: gana a ".columna-imagen img" */
+        width: 100%;
+        height: auto;
+        max-height: none;
+        object-fit: contain;
+    }
+
+    .acciones-detalle { order: 2; margin-top: 10px; }   /* al final */
+
+    .bloque-specs strong { min-width: 180px; }
+
+    /* Carruseles y grillas */
+    .carrusel-categorias { scroll-snap-type: x mandatory; }
+    .tarjeta-deslizable { flex-basis: 70vw; height: 380px; }
+    .header-categorias { padding: 20px 20px 10px; }
+
+    .grilla-categorias,
+    .grilla-4-columnas,
+    .grilla-armamento { grid-template-columns: repeat(2, 1fr); }
+
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); margin-left: 0; margin-right: 0; }
+
+    /* Formularios */
+    .inputs-grid { grid-template-columns: 1fr; gap: 8px; }
+    .inputs-grid label { margin-top: 12px; }
+    .compatibilidad-grupo { grid-template-columns: 1fr; gap: 0.75rem; }
+    .compatibilidad-grupo button,
+    .compatibilidad-grupo .btn-agregar { white-space: normal; }
+
+    /* Pantallas de acceso: título arriba, formulario abajo */
+    .pantalla-inicio {
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100vh;
+        height: 100dvh;
+        gap: 24px;
+        padding: 6vh 16px 24px;
+        overflow-y: auto;
+    }
+
+    .inicio-titulo h1 { font-size: 1.7rem; text-align: center; }
+
+    .caja-login {
+        width: 100%;
+        max-width: 420px;
+        max-height: none;
+        padding: 2rem 1.5rem;
+        overflow-y: visible;
+    }
+
+    .caja-recuperacion { width: 100%; max-width: 420px; }
+    .caja-recuperacion h2 { font-size: 1.6rem; }
+}
+
+/* ---------- Tablas como tarjetas (≤ 700px) ---------- */
+@media (max-width: 700px) {
+    .tabla-cards,
+    .tabla-cards tbody,
+    .tabla-cards tr,
+    .tabla-cards td { display: block; width: 100%; }
+
+    .tabla-cards thead { display: none; }
+
+    .tabla-cards tbody tr {
+        margin-bottom: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+    }
+
+    .tabla-cards td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        text-align: right;
+    }
+
+    .tabla-cards td::before {
+        content: attr(data-label);
+        flex-shrink: 0;
+        font-weight: bold;
+        text-align: left;
+        color: var(--color-primario);
+    }
+
+    .tabla-cards td.celda-vacia { display: block; text-align: center; }
+    .tabla-cards td.celda-vacia::before { content: none; }
+
+    .tarjeta-tabla { background: transparent; box-shadow: none; }
+}
+
+/* ---------- Celulares (≤ 600px) ---------- */
+@media (max-width: 600px) {
+    .topbar-usuario { gap: 10px; }
+    .topbar-usuario > span { display: none; } /* nombre del operador */
+    .txt-largo { display: none; }
+    .txt-corto { display: inline; }
+    .btn-admin { padding: 8px 10px; }
+
+    .grid-detalle { padding: 15px; gap: 15px; }
+    .columna-texto { font-size: 1rem; }
+
+    .cabecera-detalle { flex-wrap: wrap; gap: 4px; }
+    .cabecera-detalle h1 { font-size: 1.4rem; }
+    .cabecera-detalle h2 { font-size: 1.1rem; }
+
+    /* Cada dato pasa a dos líneas: etiqueta arriba, valor abajo */
+    .bloque-specs p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        margin: 10px 0;
+        padding-bottom: 6px;
+    }
+
+    .bloque-specs strong { min-width: 0; }
+    .bloque-specs span { margin-right: 0; text-align: left; }
+
+    .acciones-detalle,
+    .acciones-derecha,
+    .acciones-form { flex-direction: column; align-items: stretch; }
+
+    .acciones-detalle .btn,
+    .acciones-form .btn { width: 100%; }
+
+    .tarjeta-header { padding: 15px; }
+    .contenedor-tabla { padding: 10px; }
+
+    .main-content { padding: 15px; }
+    .catalog-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+    .dashboard-container { padding: 12px; }
+    .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+    .form-container { padding: 15px; }
+    .form-tarjeta { padding: 15px; }
+    .bloque-tipo { padding: 15px; }
+    .pantalla-ppal { padding: 20px 12px; }
+}
+
+/* ---------- Celulares angostos (≤ 400px) ---------- */
+@media (max-width: 400px) {
+    .dashboard-grid,
+    .grilla-categorias,
+    .grilla-4-columnas,
+    .grilla-armamento { grid-template-columns: 1fr; }
+
+    .tarjeta-deslizable { flex-basis: 82vw; height: 340px; }
+    .inicio-titulo h1 { font-size: 1.4rem; }
+}
+
+/* Respeta la preferencia de "reducir movimiento" del sistema */
+@media (prefers-reduced-motion: reduce) {
+    .sidebar,
+    .sidebar-overlay,
+    .tarjeta-cat img,
+    .tarjeta-deslizable,
+    .tactical-card,
+    .card-kpi { transition: none; }
+}
+
+/* IMPRESIÓN: deja solo la ficha (sin menú, barra superior ni botones) */
+@page { size: A4; margin: 15mm; }
+
+@media print {
+    .sidebar,
+    .sidebar-overlay,
+    .topbar,
+    .acciones-detalle { display: none !important; }
+
+    /* La app usa alto fijo y scroll interno: se libera para que imprima todo el contenido */
+    html, body, .app-contenedor, .columna-principal, .contenido {
+        display: block;
+        height: auto !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        background: #fff !important;
+        color: #000;
+    }
+
+    .grid-detalle { display: block; min-height: 0; padding: 0; background: #fff; }
+    .columna-texto { display: flex; padding: 0; font-size: 11pt; }
+    .cabecera-detalle { break-after: avoid; }
+    .bloque-specs p,
+    .bloque-descripcion { break-inside: avoid; }
+
+    .columna-imagen { position: static; max-height: none; overflow: visible; padding: 0; margin-top: 15px; }
+    .columna-imagen > div { break-inside: avoid; }
+
+    .columna-imagen .img-detalle {
+        display: block; width: auto; height: auto;
+        max-width: 100%; max-height: 8cm;
+        margin: 0 auto; object-fit: contain;
+    }
 }

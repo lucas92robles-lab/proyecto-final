@@ -4,7 +4,7 @@
 
 <div class="dashboard-container">
     
-    <h2 class="catalog-title">Panel de Control General</h2>
+    <h2>PANEL DE CONTROL GENERAL</h2>
 
     <!-- Tarjetas de Métricas Principales (KPIs) -->
     <div class="dashboard-grid">
@@ -42,13 +42,13 @@
     </div>
 
     <!-- Sección de Actividad y Último Registro -->
-    <div class="dashboard-actividad" style="margin-top: 30px;">
-        <div class="bloque-specs-dashboard">
+    <div class="dashboard-actividad">
+        <div class="bloque-specs">
             <h3>Último Activo Táctico Registrado</h3>
             <p><strong>Nombre / Diseño:</strong> <span>${ultimoMedio.nombre} (${ultimoMedio.modelo})</span></p>
             <p><strong>Categoría:</strong> <span>${ultimoMedio.categoria.nombre}</span></p>
             <p><strong>Fabricante:</strong> <span>${ultimoMedio.fabricante != null ? ultimoMedio.fabricante.nombre : '-'}</span></p>
-            <p><strong>Acción:</strong> <span><a href="${pageContext.request.contextPath}/app/medios/detalle?id=${ultimoMedio.id}">Ver ficha técnica completa</a></span></p>
+            <p><strong>Acción:</strong> <span><a href="${pageContext.request.contextPath}/app/medios/detalle-medio/${ultimoMedio.id}">Ver ficha técnica completa</a></span></p>
         </div>
     </div>
 

@@ -5,9 +5,10 @@
     <title>Recuperar Contraseña</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
     <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
+    <script src="${pageContext.request.contextPath}/js/scripts.js" defer></script>
 </head>
 
-<body class="pantalla-inicio">
+<body class="pantalla-inicio" data-context-path="${pageContext.request.contextPath}">
     <div class="caja-login caja-recuperacion">
         <h2>RECUPERACIÓN DE ACCESO</h2>
         <p>Ingresá tu correo electrónico registrado y te enviaremos las instrucciones para restablecer tu acceso.</p>

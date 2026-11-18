@@ -6,16 +6,16 @@
     <meta charset="UTF-8">
     <title>Catalogo de medios aeroespaciales</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
-        <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/image.png">
+    <script src="${pageContext.request.contextPath}/js/scripts.js" defer></script>
 </head>
 
-<body>
-
+<body data-context-path="${pageContext.request.contextPath}">
     <div class="pantalla-inicio">
         <!-- Mitad Izquierda: Título -->
         <div class="inicio-titulo">
             <h1>Sistema de catalogación<br>de medios aeroespaciales</h1>
-        </div>
+    </div>
 
         <!-- Mitad Derecha: Formulario -->
         <div class="caja-login">
