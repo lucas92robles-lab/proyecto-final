@@ -165,13 +165,13 @@
         </div>
     </div>
 
-    <!-- COLUMNA DERECHA: IMAGENES (en celulares pasa arriba como galería deslizable) -->
+    <!-- COLUMNA DERECHA: IMAGENES  -->
     <div class="columna-imagen">
 
         <!-- Imagen 1 (Principal) -->
         <c:if test="${not empty medio.imagenUrl}">
             <div>
-                <img class="img-detalle" src="${pageContext.request.contextPath}${medio.imagenUrl}" alt="Imagen 1 de ${medio.nombre}">
+                <img class="img-detalle" src="${fn:startsWith(medio.imagenUrl, 'http') ? '' : pageContext.request.contextPath}${medio.imagenUrl}" alt="Imagen 1 de ${medio.nombre}">
             </div>
         </c:if>
 
