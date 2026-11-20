@@ -34,31 +34,7 @@
         </div>
 
     </div>  
-
-/**
- <form action="${pageContext.request.contextPath}/app/auth/login" method="POST">
-                    <div class="form-group">
-                        <label for="username">USUARIO</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Ej: admin" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">CONTRASEÑA</label>
-                        <input type="password" id="password" name="password" class="form-control" required>
-                    </div>
-                    
-                    <button type="submit" class="btn-primary">INGRESAR</button>
-                </form>
-
-                <div style="text-align: center; margin-top: 15px; font-size: 0.85rem;">
-                    <a href="${pageContext.request.contextPath}/app/auth/registro" style="color: #333;">Crear cuenta nueva</a><br><br>
-                    <a href="${pageContext.request.contextPath}/app/auth/recuperar" style="color: #666;">¿Olvidaste tu contraseña?</a>
-                </div>
-            </div>
-
-**/
-
-       
+    
 
                 
                 
